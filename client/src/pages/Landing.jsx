@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LayoutGrid,
@@ -17,10 +17,12 @@ import {
   LineChart,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import heroBg from '../assets/fittrack_hero.jpg';
 
 export const Landing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [hoveredCard, setHoveredCard] = useState(null);
 
   const handleDashboardClick = () => {
     if (user) {
@@ -39,11 +41,6 @@ export const Landing = () => {
       style={{
         minHeight: '100vh',
         backgroundColor: '#070b14',
-        backgroundImage: `
-          radial-gradient(circle at 10% 20%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
-          radial-gradient(circle at 90% 30%, rgba(16, 185, 129, 0.1) 0%, transparent 45%),
-          radial-gradient(circle at 50% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%)
-        `,
         color: '#ffffff',
         fontFamily: 'var(--font-body)',
         position: 'relative',
@@ -52,6 +49,25 @@ export const Landing = () => {
         flexDirection: 'column',
       }}
     >
+      {/* CSS Keyframes for Jiggle / Jiggle Card Animation */}
+      <style>{`
+        @keyframes jiggleCard {
+          0% { transform: scale(1) rotate(0deg); }
+          20% { transform: scale(1.03) rotate(-1.5deg) translateY(-3px); }
+          40% { transform: scale(1.03) rotate(1.5deg) translateY(-3px); }
+          60% { transform: scale(1.03) rotate(-1deg) translateY(-3px); }
+          80% { transform: scale(1.03) rotate(1deg) translateY(-3px); }
+          100% { transform: scale(1.03) rotate(0deg) translateY(-3px); }
+        }
+        .metric-card-jiggle {
+          transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .metric-card-jiggle:hover {
+          animation: jiggleCard 0.45s ease-in-out forwards;
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(6, 182, 212, 0.25);
+        }
+      `}</style>
+
       {/* Hero Visual Section */}
       <div
         style={{
@@ -61,7 +77,36 @@ export const Landing = () => {
           flexDirection: 'column',
         }}
       >
-        {/* Top Navbar Header matching the UI design */}
+        {/* Runners visual behind quote in the center */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${heroBg})`,
+            backgroundPosition: 'center 40%',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.55,
+            filter: 'contrast(1.1) brightness(0.85)',
+            maskImage: 'radial-gradient(ellipse at 50% 45%, black 45%, transparent 80%)',
+            WebkitMaskImage: 'radial-gradient(ellipse at 50% 45%, black 45%, transparent 80%)',
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Subtle Ambient Glow Overlays */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(7, 11, 20, 0.75) 70%, #070b14 100%)',
+            zIndex: 2,
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Top Navbar Header */}
         <header
           style={{
             position: 'relative',
@@ -211,11 +256,12 @@ export const Landing = () => {
                 color: '#ffffff',
                 marginBottom: '24px',
                 textTransform: 'uppercase',
+                textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
               }}
             >
               DISCIPLINE <br />
               TODAY BUILDS <br />
-              <span style={{ color: '#06b6d4', textShadow: '0 0 30px rgba(6, 182, 212, 0.4)' }}>THE STRONGER</span> <br />
+              <span style={{ color: '#06b6d4', textShadow: '0 0 30px rgba(6, 182, 212, 0.5)' }}>THE STRONGER</span> <br />
               YOU TOMORROW.
             </h1>
 
@@ -223,10 +269,11 @@ export const Landing = () => {
               <p
                 style={{
                   fontSize: '1.25rem',
-                  color: 'rgba(255, 255, 255, 0.85)',
+                  color: 'rgba(255, 255, 255, 0.9)',
                   fontWeight: 400,
                   lineHeight: 1.5,
                   margin: 0,
+                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
                 }}
               >
                 Small steps. Big changes. <br />
@@ -240,7 +287,7 @@ export const Landing = () => {
                   backgroundColor: '#06b6d4',
                   borderRadius: '2px',
                   marginTop: '14px',
-                  boxShadow: '0 0 12px rgba(6, 182, 212, 0.9)',
+                  boxShadow: '0 0 14px rgba(6, 182, 212, 0.95)',
                 }}
               />
             </div>
@@ -271,7 +318,7 @@ export const Landing = () => {
                   padding: '14px 26px',
                   borderRadius: '12px',
                   fontSize: '1rem',
-                  backgroundColor: 'rgba(15, 23, 42, 0.75)',
+                  backgroundColor: 'rgba(15, 23, 42, 0.85)',
                   backdropFilter: 'blur(12px)',
                 }}
               >
@@ -281,7 +328,7 @@ export const Landing = () => {
             </div>
           </div>
 
-          {/* Right Column: 5 Glassmorphism UI Metric Cards */}
+          {/* Right Column: 5 Metric Cards with Jiggle Animation on Hover (Non-button cards) */}
           <div
             style={{
               flex: '0 1 430px',
@@ -291,29 +338,21 @@ export const Landing = () => {
               gap: '16px',
             }}
           >
-            {/* 1. Heart Rate Card */}
+            {/* 1. Heart Rate Card (Non-button with Jiggle Animation) */}
             <div
-              onClick={handleDashboardClick}
+              className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'rgba(15, 23, 42, 0.8)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(244, 63, 94, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -347,7 +386,7 @@ export const Landing = () => {
               </div>
 
               {/* Sparkline Graph */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div>
                 <svg width="64" height="30" viewBox="0 0 60 28" fill="none">
                   <path
                     d="M2 18 C 10 8, 20 24, 30 14 C 40 4, 50 20, 58 10"
@@ -356,33 +395,24 @@ export const Landing = () => {
                     strokeLinecap="round"
                   />
                 </svg>
-                <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
               </div>
             </div>
 
-            {/* 2. Blood Pressure Card */}
+            {/* 2. Blood Pressure Card (Non-button with Jiggle Animation) */}
             <div
-              onClick={handleDashboardClick}
+              className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'rgba(15, 23, 42, 0.8)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -416,7 +446,7 @@ export const Landing = () => {
               </div>
 
               {/* Sparkline Graph */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div>
                 <svg width="64" height="30" viewBox="0 0 60 28" fill="none">
                   <path
                     d="M2 14 C 15 22, 35 6, 58 14"
@@ -425,33 +455,24 @@ export const Landing = () => {
                     strokeLinecap="round"
                   />
                 </svg>
-                <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
               </div>
             </div>
 
-            {/* 3. Steps Walked Card */}
+            {/* 3. Steps Walked Card (Non-button with Jiggle Animation) */}
             <div
-              onClick={handleDashboardClick}
+              className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'rgba(15, 23, 42, 0.8)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(16, 185, 129, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -485,41 +506,30 @@ export const Landing = () => {
               </div>
 
               {/* Bar Columns Indicator */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '24px' }}>
-                  <div style={{ width: '4px', height: '10px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                  <div style={{ width: '4px', height: '18px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                  <div style={{ width: '4px', height: '14px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                  <div style={{ width: '4px', height: '24px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                  <div style={{ width: '4px', height: '20px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                </div>
-                <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
+              <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '24px' }}>
+                <div style={{ width: '4px', height: '10px', backgroundColor: '#10b981', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '18px', backgroundColor: '#10b981', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '14px', backgroundColor: '#10b981', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '24px', backgroundColor: '#10b981', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '20px', backgroundColor: '#10b981', borderRadius: '2px' }} />
               </div>
             </div>
 
-            {/* 4. Calories Burned Card */}
+            {/* 4. Calories Burned Card (Non-button with Jiggle Animation) */}
             <div
-              onClick={handleDashboardClick}
+              className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'rgba(15, 23, 42, 0.8)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.transform = 'translateY(0)';
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -553,7 +563,7 @@ export const Landing = () => {
               </div>
 
               {/* Sparkline Graph */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div>
                 <svg width="64" height="30" viewBox="0 0 60 28" fill="none">
                   <path
                     d="M2 20 C 12 6, 25 24, 38 12 C 48 4, 54 16, 58 8"
@@ -562,17 +572,17 @@ export const Landing = () => {
                     strokeLinecap="round"
                   />
                 </svg>
-                <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
               </div>
             </div>
 
             {/* 5. Your Fitness Journey Card */}
             <div
               onClick={handleDashboardClick}
+              className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.75)',
+                background: 'rgba(15, 23, 42, 0.8)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.14)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
@@ -580,15 +590,6 @@ export const Landing = () => {
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
                 cursor: 'pointer',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(6, 182, 212, 0.6)';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
-                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
@@ -617,7 +618,7 @@ export const Landing = () => {
                 </div>
               </div>
 
-              <ChevronRight size={18} color="rgba(255, 255, 255, 0.4)" />
+              <ChevronRight size={18} color="rgba(255, 255, 255, 0.5)" />
             </div>
           </div>
         </div>
@@ -630,6 +631,8 @@ export const Landing = () => {
           maxWidth: '1300px',
           margin: '0 auto',
           width: '100%',
+          position: 'relative',
+          zIndex: 10,
         }}
       >
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
