@@ -68,6 +68,33 @@ export const Landing = () => {
         }
       `}</style>
 
+      {/* Full-Page Background Image (Covers Hero + 3 Core Platform Pillars) */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundImage: `url(${heroBg})`,
+          backgroundPosition: 'center 30%',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          opacity: 0.94,
+          filter: 'brightness(1.06) contrast(1.05) saturate(1.1)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
+      {/* Subtle Ambient Gradient Overlay across full page for optimal text and card readability */}
+      <div
+        style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 35%, rgba(7, 11, 20, 0.6) 70%, rgba(7, 11, 20, 0.88) 100%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        }}
+      />
+
       {/* Hero Visual Section */}
       <div
         style={{
@@ -75,35 +102,9 @@ export const Landing = () => {
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
+          zIndex: 1,
         }}
       >
-        {/* Runners visual background - clean, high brightness and vibrant */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: `url(${heroBg})`,
-            backgroundPosition: 'center 35%',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'no-repeat',
-            opacity: 0.92,
-            filter: 'brightness(1.08) contrast(1.06) saturate(1.1)',
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
-
-        {/* Subtle Gradient Overlay to ensure text & card legibility while keeping image bright */}
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 40%, rgba(7, 11, 20, 0.7) 85%, #070b14 100%)',
-            zIndex: 2,
-            pointerEvents: 'none',
-          }}
-        />
-
         {/* Top Navbar Header */}
         <header
           style={{
@@ -660,32 +661,65 @@ export const Landing = () => {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-          <div className="glass-card glass-card-glow">
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-              <Dumbbell size={24} />
+          <div
+            className="glass-card glass-card-glow"
+            style={{
+              background: 'rgba(15, 23, 42, 0.78)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(16, 185, 129, 0.25)',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)' }}>
+              <Dumbbell size={26} />
             </div>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#fff' }}>Dynamic Workout Logger</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Dynamic Workout Logger</h3>
+            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
               Log reps, weights (kg), RPE intensity (1-10), and audio-assisted rest timers set-by-set in real time with instant technique instructions.
             </p>
           </div>
 
-          <div className="glass-card glass-card-glow">
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'rgba(6, 182, 212, 0.15)', color: '#06b6d4', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-              <Target size={24} />
+          <div
+            className="glass-card glass-card-glow"
+            style={{
+              background: 'rgba(15, 23, 42, 0.78)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(6, 182, 212, 0.25)',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(6, 182, 212, 0.2)', color: '#06b6d4', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)' }}>
+              <Target size={26} />
             </div>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#fff' }}>Smart Goal Tracking</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Smart Goal Tracking</h3>
+            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
               Set weight targets, weekly consistency streaks, and strength milestones with automated workout progress calculations.
             </p>
           </div>
 
-          <div className="glass-card glass-card-glow">
-            <div style={{ width: '46px', height: '46px', borderRadius: '12px', background: 'rgba(139, 92, 246, 0.15)', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
-              <LineChart size={24} />
+          <div
+            className="glass-card glass-card-glow"
+            style={{
+              background: 'rgba(15, 23, 42, 0.78)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(139, 92, 246, 0.25)',
+              borderRadius: '20px',
+              padding: '28px 24px',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          >
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}>
+              <LineChart size={26} />
             </div>
-            <h3 style={{ fontSize: '1.25rem', marginBottom: '8px', color: '#fff' }}>Advanced Analytics</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Advanced Analytics</h3>
+            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
               Visualize total volume progression, caloric burn rates, muscle group distribution, and workout frequency over time.
             </p>
           </div>
