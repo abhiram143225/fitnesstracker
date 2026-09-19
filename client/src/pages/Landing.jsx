@@ -77,30 +77,28 @@ export const Landing = () => {
           flexDirection: 'column',
         }}
       >
-        {/* Runners visual behind quote in the center */}
+        {/* Runners visual background - clean, high brightness and vibrant */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
             backgroundImage: `url(${heroBg})`,
-            backgroundPosition: 'center 40%',
+            backgroundPosition: 'center 35%',
             backgroundSize: 'cover',
             backgroundRepeat: 'no-repeat',
-            opacity: 0.55,
-            filter: 'contrast(1.1) brightness(0.85)',
-            maskImage: 'radial-gradient(ellipse at 50% 45%, black 45%, transparent 80%)',
-            WebkitMaskImage: 'radial-gradient(ellipse at 50% 45%, black 45%, transparent 80%)',
+            opacity: 0.92,
+            filter: 'brightness(1.08) contrast(1.06) saturate(1.1)',
             pointerEvents: 'none',
             zIndex: 1,
           }}
         />
 
-        {/* Subtle Ambient Glow Overlays */}
+        {/* Subtle Gradient Overlay to ensure text & card legibility while keeping image bright */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.55) 0%, rgba(7, 11, 20, 0.75) 70%, #070b14 100%)',
+            background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 40%, rgba(7, 11, 20, 0.7) 85%, #070b14 100%)',
             zIndex: 2,
             pointerEvents: 'none',
           }}
