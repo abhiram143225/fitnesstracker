@@ -1,0 +1,15 @@
+{
+  "name": "fitness-tracking-app",
+  "version": "1.0.0",
+  "description": "Full-Stack Fitness Tracking Application (React + Express + MongoDB Atlas)",
+  "private": true,
+  "scripts": {
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "seed": "npm run seed --prefix server",
+    "build": "npm run build --prefix client"
+  },
+  "keywords": ["fitness", "workout-tracker", "react", "express", "mongodb"],
+  "author": "",
+  "license": "ISC"
+}
