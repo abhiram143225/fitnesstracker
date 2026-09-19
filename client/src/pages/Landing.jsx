@@ -25,15 +25,11 @@ export const Landing = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const handleDashboardClick = () => {
-    if (user) {
-      navigate('/dashboard');
-    } else {
-      navigate('/login');
-    }
+    navigate('/login');
   };
 
   const handleSignInClick = () => {
-    navigate('/login');
+    navigate('/register');
   };
 
   return (
@@ -294,7 +290,7 @@ export const Landing = () => {
             {/* Action Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
               <button
-                onClick={handleDashboardClick}
+                onClick={() => navigate('/login')}
                 className="btn btn-primary"
                 style={{
                   padding: '14px 30px',
@@ -311,7 +307,7 @@ export const Landing = () => {
               </button>
 
               <button
-                onClick={() => navigate('/exercises')}
+                onClick={() => navigate('/login')}
                 className="btn btn-secondary"
                 style={{
                   padding: '14px 26px',
