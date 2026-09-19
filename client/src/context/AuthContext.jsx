@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authService } from '../services/authService';
+import { useTheme } from './ThemeContext';
 
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(authService.getStoredUser());
   const [loading, setLoading] = useState(true);
+  const { setTheme } = useTheme();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -14,10 +16,18 @@ export const AuthProvider = ({ children }) => {
         try {
           const data = await authService.getMe();
           setUser(data.user);
+          if (data.user?.preferences?.theme) {
+            setTheme(data.user.preferences.theme);
+          }
         } catch {
           // Token invalid or network issue, fallback to stored user if any
           const stored = authService.getStoredUser();
-          if (stored) setUser(stored);
+          if (stored) {
+            setUser(stored);
+            if (stored.preferences?.theme) {
+              setTheme(stored.preferences.theme);
+            }
+          }
         }
       }
       setLoading(false);
@@ -29,18 +39,27 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const data = await authService.login({ email, password });
     setUser(data.user);
+    if (data.user?.preferences?.theme) {
+      setTheme(data.user.preferences.theme);
+    }
     return data;
   };
 
   const register = async (formData) => {
     const data = await authService.register(formData);
     setUser(data.user);
+    if (data.user?.preferences?.theme) {
+      setTheme(data.user.preferences.theme);
+    }
     return data;
   };
 
   const updateProfile = async (profileData) => {
     const data = await authService.updateProfile(profileData);
     setUser(data.user);
+    if (data.user?.preferences?.theme) {
+      setTheme(data.user.preferences.theme);
+    }
     return data;
   };
 

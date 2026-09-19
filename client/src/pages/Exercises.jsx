@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
   Search,
-  Filter,
   Plus,
   Dumbbell,
-  Flame,
-  Activity,
-  Shield,
-  Zap,
-  Info,
   ChevronRight,
   Sparkles,
+  Info,
 } from 'lucide-react';
 import { exerciseService } from '../services/exerciseService';
 import { Modal } from '../components/Modal';
@@ -109,8 +104,8 @@ export const Exercises = () => {
       {/* Page Header */}
       <div className="flex-between" style={{ marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Exercise Library</h1>
-          <p style={{ margin: 0 }}>Explore movements, execution instructions, and goal-tailored suggestions</p>
+          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Exercise Library</h1>
+          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Explore movements, execution instructions, and goal-tailored suggestions</p>
         </div>
         <button onClick={() => setIsAddModalOpen(true)} className="btn btn-primary">
           <Plus size={18} />
@@ -186,13 +181,13 @@ export const Exercises = () => {
       {loading ? (
         <div style={{ textAlign: 'center', padding: '60px' }}>
           <div style={{ width: '36px', height: '36px', border: '3px solid rgba(16,185,129,0.2)', borderTopColor: '#10b981', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 0.8s linear infinite' }} />
-          <p>Loading exercise database...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading exercise database...</p>
         </div>
       ) : displayedExercises.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px 16px' }}>
           <Dumbbell size={40} style={{ opacity: 0.3, marginBottom: '12px' }} />
-          <h3>No exercises found</h3>
-          <p>Try clearing your filters or adding a custom exercise.</p>
+          <h3 style={{ color: 'var(--text-primary)' }}>No exercises found</h3>
+          <p style={{ color: 'var(--text-secondary)' }}>Try clearing your filters or adding a custom exercise.</p>
         </div>
       ) : (
         <div className="grid-cols-3">
@@ -211,7 +206,7 @@ export const Exercises = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  border: isRecommended ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid var(--border-subtle)',
+                  border: isRecommended ? '1px solid var(--accent-cyan)' : '1px solid var(--border-subtle)',
                 }}
               >
                 <div>
@@ -226,7 +221,7 @@ export const Exercises = () => {
                     )}
                   </div>
 
-                  <h3 style={{ fontSize: '1.15rem', color: '#fff', marginBottom: '8px' }}>
+                  <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)', marginBottom: '8px' }}>
                     {ex.name}
                   </h3>
 
@@ -236,7 +231,8 @@ export const Exercises = () => {
                         key={m}
                         style={{
                           fontSize: '0.75rem',
-                          background: 'rgba(255, 255, 255, 0.06)',
+                          background: 'var(--bg-surface-elevated)',
+                          border: '1px solid var(--border-subtle)',
                           padding: '2px 8px',
                           borderRadius: '6px',
                           color: 'var(--text-secondary)',
@@ -296,7 +292,7 @@ export const Exercises = () => {
                   <span key={m} className="badge badge-emerald">{m}</span>
                 ))}
                 {selectedExercise.secondaryMuscles?.map((m) => (
-                  <span key={m} style={{ fontSize: '0.75rem', background: 'rgba(255,255,255,0.08)', padding: '4px 10px', borderRadius: '999px', color: '#cbd5e1' }}>
+                  <span key={m} style={{ fontSize: '0.75rem', background: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)', padding: '4px 10px', borderRadius: '999px', color: 'var(--text-secondary)' }}>
                     {m} (Secondary)
                   </span>
                 ))}
@@ -305,7 +301,7 @@ export const Exercises = () => {
 
             {selectedExercise.instructions && selectedExercise.instructions.length > 0 && (
               <div style={{ marginBottom: '20px' }}>
-                <h4 style={{ fontSize: '0.95rem', color: '#fff', marginBottom: '10px' }}>
+                <h4 style={{ fontSize: '0.95rem', color: 'var(--text-primary)', marginBottom: '10px' }}>
                   Execution Instructions
                 </h4>
                 <ol style={{ paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
@@ -326,10 +322,10 @@ export const Exercises = () => {
                   marginBottom: '16px',
                 }}
               >
-                <h4 style={{ color: '#10b981', fontSize: '0.85rem', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <h4 style={{ color: 'var(--accent-primary)', fontSize: '0.85rem', marginBottom: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Info size={16} /> Coach Pro Tips
                 </h4>
-                <ul style={{ paddingLeft: '16px', margin: 0, fontSize: '0.85rem', color: '#cbd5e1' }}>
+                <ul style={{ paddingLeft: '16px', margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                   {selectedExercise.tips.map((t, idx) => (
                     <li key={idx}>{t}</li>
                   ))}

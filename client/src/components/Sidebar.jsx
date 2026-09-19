@@ -6,13 +6,13 @@ import {
   Calendar,
   Target,
   LineChart,
-  Trophy,
   User,
   PlusCircle,
   LogOut,
   Flame,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ThemeToggle } from './ThemeToggle';
 
 export const Sidebar = () => {
   const { user, logout } = useAuth();
@@ -41,6 +41,7 @@ export const Sidebar = () => {
         flexDirection: 'column',
         padding: '24px 16px',
         zIndex: 40,
+        transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
       }}
       className="desktop-sidebar"
     >
@@ -52,7 +53,7 @@ export const Sidebar = () => {
           alignItems: 'center',
           gap: '12px',
           padding: '0 8px',
-          marginBottom: '32px',
+          marginBottom: '24px',
           cursor: 'pointer',
         }}
       >
@@ -65,14 +66,14 @@ export const Sidebar = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: '#051a14',
+            color: 'var(--btn-primary-text)',
             boxShadow: '0 0 15px var(--accent-primary-glow)',
           }}
         >
           <Flame size={22} strokeWidth={2.5} />
         </div>
         <div>
-          <span style={{ fontSize: '1.3rem', fontWeight: 900, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', color: '#fff' }}>
+          <span style={{ fontSize: '1.3rem', fontWeight: 900, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
             PULSE
           </span>
           <span style={{ fontSize: '0.65rem', display: 'block', color: 'var(--accent-primary)', fontWeight: 700, letterSpacing: '0.1em' }}>
@@ -82,7 +83,7 @@ export const Sidebar = () => {
       </div>
 
       {/* Quick Action: Log Workout */}
-      <div style={{ marginBottom: '24px', padding: '0 4px' }}>
+      <div style={{ marginBottom: '20px', padding: '0 4px' }}>
         <button
           onClick={() => navigate('/workouts/new')}
           className="btn btn-primary"
@@ -94,7 +95,7 @@ export const Sidebar = () => {
       </div>
 
       {/* Navigation List */}
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+      <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1, overflowY: 'auto' }}>
         {navLinks.map((link) => {
           const Icon = link.icon;
           return (
@@ -107,7 +108,7 @@ export const Sidebar = () => {
                 gap: '12px',
                 padding: '12px 14px',
                 borderRadius: '10px',
-                color: isActive ? '#fff' : 'var(--text-secondary)',
+                color: isActive ? 'var(--text-primary)' : 'var(--text-secondary)',
                 backgroundColor: isActive ? 'var(--bg-surface-hover)' : 'transparent',
                 borderLeft: isActive ? '3px solid var(--accent-primary)' : '3px solid transparent',
                 fontWeight: isActive ? 600 : 500,
@@ -122,7 +123,7 @@ export const Sidebar = () => {
         })}
       </nav>
 
-      {/* User Section & Logout */}
+      {/* User Section, Theme Toggle & Logout */}
       <div
         style={{
           borderTop: '1px solid var(--border-subtle)',
@@ -130,11 +131,12 @@ export const Sidebar = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: '8px',
         }}
       >
         <div
           onClick={() => navigate('/profile')}
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', overflow: 'hidden' }}
+          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer', overflow: 'hidden', flex: 1 }}
         >
           <div
             style={{
@@ -147,14 +149,14 @@ export const Sidebar = () => {
               justifyContent: 'center',
               fontWeight: 700,
               fontSize: '0.85rem',
-              color: '#fff',
+              color: '#ffffff',
               flexShrink: 0,
             }}
           >
             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div style={{ overflow: 'hidden' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }}>
               {user?.name || 'Athlete'}
             </div>
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', textTransform: 'capitalize' }}>
@@ -167,7 +169,7 @@ export const Sidebar = () => {
           onClick={logout}
           title="Sign Out"
           className="btn-icon"
-          style={{ padding: '8px', color: '#94a3b8' }}
+          style={{ padding: '8px' }}
         >
           <LogOut size={16} />
         </button>

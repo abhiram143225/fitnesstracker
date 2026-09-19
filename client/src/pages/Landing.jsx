@@ -17,11 +17,14 @@ import {
   LineChart,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
+import { ThemeToggle } from '../components/ThemeToggle';
 import heroBg from '../assets/fittrack_hero.jpg';
 
 export const Landing = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const { isBright } = useTheme();
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const handleAction = () => {
@@ -33,13 +36,14 @@ export const Landing = () => {
     <div
       style={{
         minHeight: '100vh',
-        backgroundColor: '#070b14',
-        color: '#ffffff',
+        backgroundColor: 'var(--bg-dark)',
+        color: 'var(--text-primary)',
         fontFamily: 'var(--font-body)',
         position: 'relative',
         overflowX: 'hidden',
         display: 'flex',
         flexDirection: 'column',
+        transition: 'background-color var(--transition-normal), color var(--transition-normal)',
       }}
     >
       {/* CSS Keyframes for Jiggle / Jiggle Card Animation */}
@@ -57,7 +61,7 @@ export const Landing = () => {
         }
         .metric-card-jiggle:hover {
           animation: jiggleCard 0.45s ease-in-out forwards;
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 24px rgba(6, 182, 212, 0.25);
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35), 0 0 24px rgba(6, 182, 212, 0.25);
         }
       `}</style>
 
@@ -70,21 +74,25 @@ export const Landing = () => {
           backgroundPosition: 'center 38%',
           backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat',
-          opacity: 0.95,
-          filter: 'brightness(1.06) contrast(1.06) saturate(1.12)',
+          opacity: isBright ? 0.88 : 0.95,
+          filter: isBright ? 'brightness(0.78) contrast(1.08) saturate(1.05)' : 'brightness(1.06) contrast(1.06) saturate(1.12)',
           pointerEvents: 'none',
           zIndex: 0,
+          transition: 'opacity 0.3s ease, filter 0.3s ease',
         }}
       />
 
-      {/* Subtle Ambient Gradient Overlay across full page for optimal text and card readability */}
+      {/* Ambient Gradient Overlay across full page for optimal text and card readability */}
       <div
         style={{
           position: 'fixed',
           inset: 0,
-          background: 'linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 35%, rgba(7, 11, 20, 0.6) 70%, rgba(7, 11, 20, 0.88) 100%)',
+          background: isBright
+            ? 'linear-gradient(180deg, rgba(215, 225, 238, 0.45) 0%, rgba(215, 225, 238, 0.25) 35%, rgba(200, 215, 230, 0.55) 70%, rgba(185, 202, 220, 0.85) 100%)'
+            : 'linear-gradient(180deg, rgba(7, 11, 20, 0.45) 0%, rgba(7, 11, 20, 0.25) 35%, rgba(7, 11, 20, 0.6) 70%, rgba(7, 11, 20, 0.88) 100%)',
           pointerEvents: 'none',
           zIndex: 0,
+          transition: 'background 0.3s ease',
         }}
       />
 
@@ -103,7 +111,7 @@ export const Landing = () => {
           style={{
             position: 'relative',
             zIndex: 10,
-            padding: '28px 48px',
+            padding: '24px 48px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -128,11 +136,11 @@ export const Landing = () => {
                 width: '42px',
                 height: '42px',
                 borderRadius: '50%',
-                background: '#06b6d4',
+                background: 'var(--accent-cyan)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                color: '#070b14',
+                color: isBright ? '#ffffff' : '#070b14',
                 boxShadow: '0 0 20px rgba(6, 182, 212, 0.55)',
               }}
             >
@@ -144,15 +152,18 @@ export const Landing = () => {
                 fontWeight: 800,
                 fontFamily: 'var(--font-display)',
                 letterSpacing: '-0.02em',
-                color: '#ffffff',
+                color: isBright ? '#09111e' : '#ffffff',
               }}
             >
-              Fit<span style={{ color: '#06b6d4' }}>Track</span>
+              Fit<span style={{ color: 'var(--accent-cyan)' }}>Track</span>
             </span>
           </div>
 
-          {/* Top Right Buttons: Dashboard & Sign In matching the image */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* Top Right Buttons: Theme Toggle (beside Dashboard), Dashboard & Sign In */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            {/* Dark / Bright Theme Button - Beside Dashboard Button */}
+            <ThemeToggle />
+
             {/* Dashboard Button */}
             <button
               onClick={handleAction}
@@ -160,28 +171,38 @@ export const Landing = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '11px 22px',
+                padding: '10px 22px',
                 borderRadius: '999px',
-                backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                backgroundColor: isBright ? 'rgba(236, 242, 248, 0.9)' : 'rgba(15, 23, 42, 0.85)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
-                color: '#ffffff',
+                border: isBright ? '1px solid rgba(0, 0, 0, 0.16)' : '1px solid rgba(255, 255, 255, 0.16)',
+                color: isBright ? '#09111e' : '#ffffff',
                 fontSize: '0.92rem',
                 fontWeight: 600,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                boxShadow: isBright ? '0 2px 8px rgba(0, 0, 0, 0.08)' : '0 4px 15px rgba(0, 0, 0, 0.3)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(6, 182, 212, 0.25)';
-                e.currentTarget.style.borderColor = '#06b6d4';
+                if (isBright) {
+                  e.currentTarget.style.backgroundColor = 'rgba(8, 145, 178, 0.18)';
+                  e.currentTarget.style.borderColor = 'var(--accent-cyan)';
+                } else {
+                  e.currentTarget.style.backgroundColor = 'rgba(6, 182, 212, 0.25)';
+                  e.currentTarget.style.borderColor = '#06b6d4';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.85)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                if (isBright) {
+                  e.currentTarget.style.backgroundColor = 'rgba(236, 242, 248, 0.9)';
+                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.16)';
+                } else {
+                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.85)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                }
               }}
             >
-              <LayoutGrid size={18} color="#06b6d4" />
+              <LayoutGrid size={18} color="var(--accent-cyan)" />
               <span>Dashboard</span>
             </button>
 
@@ -192,28 +213,38 @@ export const Landing = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '11px 24px',
+                padding: '10px 22px',
                 borderRadius: '999px',
-                backgroundColor: 'rgba(15, 23, 42, 0.85)',
+                backgroundColor: isBright ? 'rgba(217, 227, 237, 0.9)' : 'rgba(15, 23, 42, 0.85)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.16)',
-                color: '#ffffff',
+                border: isBright ? '1px solid rgba(0, 0, 0, 0.16)' : '1px solid rgba(255, 255, 255, 0.16)',
+                color: isBright ? '#09111e' : '#ffffff',
                 fontSize: '0.92rem',
                 fontWeight: 600,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                boxShadow: isBright ? '0 2px 8px rgba(0, 0, 0, 0.08)' : '0 4px 15px rgba(0, 0, 0, 0.3)',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
-                e.currentTarget.style.borderColor = '#ffffff';
+                if (isBright) {
+                  e.currentTarget.style.backgroundColor = '#cad6e3';
+                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.25)';
+                } else {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.borderColor = '#ffffff';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.85)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                if (isBright) {
+                  e.currentTarget.style.backgroundColor = 'rgba(217, 227, 237, 0.9)';
+                  e.currentTarget.style.borderColor = 'rgba(0, 0, 0, 0.16)';
+                } else {
+                  e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.85)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+                }
               }}
             >
-              <User size={18} color="#ffffff" />
+              <User size={18} color={isBright ? '#09111e' : '#ffffff'} />
               <span>Sign In</span>
             </button>
           </div>
@@ -245,15 +276,15 @@ export const Landing = () => {
                 fontFamily: 'var(--font-display)',
                 lineHeight: 1.05,
                 letterSpacing: '-0.02em',
-                color: '#ffffff',
+                color: isBright ? '#0f172a' : '#ffffff',
                 marginBottom: '24px',
                 textTransform: 'uppercase',
-                textShadow: '0 4px 20px rgba(0, 0, 0, 0.8)',
+                textShadow: isBright ? '0 2px 10px rgba(255, 255, 255, 0.8)' : '0 4px 20px rgba(0, 0, 0, 0.8)',
               }}
             >
               DISCIPLINE <br />
               TODAY BUILDS <br />
-              <span style={{ color: '#06b6d4', textShadow: '0 0 30px rgba(6, 182, 212, 0.5)' }}>THE STRONGER</span> <br />
+              <span style={{ color: 'var(--accent-cyan)', textShadow: isBright ? 'none' : '0 0 30px rgba(6, 182, 212, 0.5)' }}>THE STRONGER</span> <br />
               YOU TOMORROW.
             </h1>
 
@@ -261,11 +292,11 @@ export const Landing = () => {
               <p
                 style={{
                   fontSize: '1.25rem',
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontWeight: 400,
+                  color: isBright ? '#334155' : 'rgba(255, 255, 255, 0.9)',
+                  fontWeight: 500,
                   lineHeight: 1.5,
                   margin: 0,
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)',
+                  textShadow: isBright ? 'none' : '0 2px 10px rgba(0, 0, 0, 0.8)',
                 }}
               >
                 Small steps. Big changes. <br />
@@ -276,10 +307,10 @@ export const Landing = () => {
                 style={{
                   width: '60px',
                   height: '4px',
-                  backgroundColor: '#06b6d4',
+                  backgroundColor: 'var(--accent-cyan)',
                   borderRadius: '2px',
                   marginTop: '14px',
-                  boxShadow: '0 0 14px rgba(6, 182, 212, 0.95)',
+                  boxShadow: '0 0 14px rgba(6, 182, 212, 0.75)',
                 }}
               />
             </div>
@@ -294,9 +325,6 @@ export const Landing = () => {
                   borderRadius: '12px',
                   fontSize: '1rem',
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #06b6d4, #10b981)',
-                  color: '#070b14',
-                  boxShadow: '0 8px 24px rgba(6, 182, 212, 0.4)',
                 }}
               >
                 <span>Launch Workout Tracker</span>
@@ -310,8 +338,6 @@ export const Landing = () => {
                   padding: '14px 26px',
                   borderRadius: '12px',
                   fontSize: '1rem',
-                  backgroundColor: 'rgba(15, 23, 42, 0.85)',
-                  backdropFilter: 'blur(12px)',
                 }}
               >
                 <Dumbbell size={18} />
@@ -320,7 +346,7 @@ export const Landing = () => {
             </div>
           </div>
 
-          {/* Right Column: 5 Metric Cards with Jiggle Animation on Hover (Non-button cards) */}
+          {/* Right Column: 5 Metric Cards with Jiggle Animation on Hover */}
           <div
             style={{
               flex: '0 1 430px',
@@ -330,19 +356,19 @@ export const Landing = () => {
               gap: '16px',
             }}
           >
-            {/* 1. Heart Rate Card (Non-button with Jiggle Animation) */}
+            {/* 1. Heart Rate Card */}
             <div
               className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid var(--border-light)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'var(--shadow-md)',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -364,14 +390,14 @@ export const Landing = () => {
                   <Heart size={24} fill="#fff" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 500 }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
                     Heart Rate
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: '#fff' }}>72</span>
-                    <span style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>bpm</span>
+                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--text-primary)' }}>72</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>bpm</span>
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <TrendingUp size={13} /> 12% vs yesterday
                   </div>
                 </div>
@@ -390,19 +416,19 @@ export const Landing = () => {
               </div>
             </div>
 
-            {/* 2. Blood Pressure Card (Non-button with Jiggle Animation) */}
+            {/* 2. Blood Pressure Card */}
             <div
               className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid var(--border-light)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'var(--shadow-md)',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -424,14 +450,14 @@ export const Landing = () => {
                   <Droplet size={24} fill="#fff" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 500 }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
                     Blood Pressure
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: '#fff' }}>118/76</span>
-                    <span style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>mmHg</span>
+                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--text-primary)' }}>118/76</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>mmHg</span>
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <TrendingDown size={13} /> 5% vs yesterday
                   </div>
                 </div>
@@ -442,7 +468,7 @@ export const Landing = () => {
                 <svg width="64" height="30" viewBox="0 0 60 28" fill="none">
                   <path
                     d="M2 14 C 15 22, 35 6, 58 14"
-                    stroke="#06b6d4"
+                    stroke="var(--accent-cyan)"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                   />
@@ -450,19 +476,19 @@ export const Landing = () => {
               </div>
             </div>
 
-            {/* 3. Steps Walked Card (Non-button with Jiggle Animation) */}
+            {/* 3. Steps Walked Card */}
             <div
               className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid var(--border-light)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'var(--shadow-md)',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -481,17 +507,17 @@ export const Landing = () => {
                     boxShadow: '0 0 18px rgba(16, 185, 129, 0.45)',
                   }}
                 >
-                  <Footprints size={24} strokeWidth={2.5} />
+                  <Footprints size={24} strokeWidth={2.5} color="#ffffff" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 500 }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
                     Steps Walked
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: '#fff' }}>8,532</span>
-                    <span style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>steps</span>
+                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--text-primary)' }}>8,532</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>steps</span>
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <TrendingUp size={13} /> 18% vs yesterday
                   </div>
                 </div>
@@ -499,27 +525,27 @@ export const Landing = () => {
 
               {/* Bar Columns Indicator */}
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '24px' }}>
-                <div style={{ width: '4px', height: '10px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                <div style={{ width: '4px', height: '18px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                <div style={{ width: '4px', height: '14px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                <div style={{ width: '4px', height: '24px', backgroundColor: '#10b981', borderRadius: '2px' }} />
-                <div style={{ width: '4px', height: '20px', backgroundColor: '#10b981', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '10px', backgroundColor: 'var(--accent-primary)', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '18px', backgroundColor: 'var(--accent-primary)', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '14px', backgroundColor: 'var(--accent-primary)', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '24px', backgroundColor: 'var(--accent-primary)', borderRadius: '2px' }} />
+                <div style={{ width: '4px', height: '20px', backgroundColor: 'var(--accent-primary)', borderRadius: '2px' }} />
               </div>
             </div>
 
-            {/* 4. Calories Burned Card (Non-button with Jiggle Animation) */}
+            {/* 4. Calories Burned Card */}
             <div
               className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid var(--border-light)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'var(--shadow-md)',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -541,14 +567,14 @@ export const Landing = () => {
                   <Flame size={24} fill="#fff" />
                 </div>
                 <div>
-                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)', fontWeight: 500 }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', fontWeight: 500 }}>
                     Calories Burned
                   </div>
                   <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: '#fff' }}>482</span>
-                    <span style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>kcal</span>
+                    <span style={{ fontSize: '1.55rem', fontWeight: 800, color: 'var(--text-primary)' }}>482</span>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>kcal</span>
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#10b981', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <TrendingUp size={13} /> 22% vs yesterday
                   </div>
                 </div>
@@ -567,19 +593,19 @@ export const Landing = () => {
               </div>
             </div>
 
-            {/* 5. Your Fitness Journey Card (Non-button with Jiggle Animation) */}
+            {/* 5. Your Fitness Journey Card */}
             <div
               className="metric-card-jiggle"
               style={{
-                background: 'rgba(15, 23, 42, 0.8)',
+                background: 'var(--bg-card)',
                 backdropFilter: 'blur(16px)',
-                border: '1px solid rgba(255, 255, 255, 0.14)',
+                border: '1px solid var(--border-light)',
                 borderRadius: '20px',
                 padding: '18px 22px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                boxShadow: 'var(--shadow-md)',
                 cursor: 'default',
                 userSelect: 'none',
               }}
@@ -601,13 +627,13 @@ export const Landing = () => {
                   <Target size={24} />
                 </div>
                 <div>
-                  <div style={{ fontSize: '1rem', color: '#fff', fontWeight: 700 }}>
+                  <div style={{ fontSize: '1rem', color: 'var(--text-primary)', fontWeight: 700 }}>
                     Your Fitness Journey
                   </div>
-                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
                     Track • Improve • Achieve
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--accent-purple)', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
                     <TrendingUp size={13} /> Active Streak: 7 Days
                   </div>
                 </div>
@@ -620,7 +646,7 @@ export const Landing = () => {
                   borderRadius: '999px',
                   background: 'rgba(139, 92, 246, 0.15)',
                   border: '1px solid rgba(139, 92, 246, 0.3)',
-                  color: '#a78bfa',
+                  color: 'var(--accent-purple)',
                   fontSize: '0.78rem',
                   fontWeight: 700,
                   letterSpacing: '0.04em',
@@ -648,7 +674,7 @@ export const Landing = () => {
           <span className="badge badge-cyan" style={{ marginBottom: '12px' }}>
             Core Platform Pillars
           </span>
-          <h2 style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fff' }}>
+          <h2 style={{ fontSize: '2.2rem', fontWeight: 800, color: 'var(--text-primary)' }}>
             Engineered for Serious Athletic Progress
           </h2>
         </div>
@@ -657,20 +683,18 @@ export const Landing = () => {
           <div
             className="glass-card glass-card-glow"
             style={{
-              background: 'rgba(15, 23, 42, 0.78)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(16, 185, 129, 0.25)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-light)',
               borderRadius: '20px',
               padding: '28px 24px',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(16, 185, 129, 0.2)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(16, 185, 129, 0.3)' }}>
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px var(--accent-primary-glow)' }}>
               <Dumbbell size={26} />
             </div>
-            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Dynamic Workout Logger</h3>
-            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>Dynamic Workout Logger</h3>
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
               Log reps, weights (kg), RPE intensity (1-10), and audio-assisted rest timers set-by-set in real time with instant technique instructions.
             </p>
           </div>
@@ -678,20 +702,18 @@ export const Landing = () => {
           <div
             className="glass-card glass-card-glow"
             style={{
-              background: 'rgba(15, 23, 42, 0.78)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(6, 182, 212, 0.25)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-light)',
               borderRadius: '20px',
               padding: '28px 24px',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(6, 182, 212, 0.2)', color: '#06b6d4', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)' }}>
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(6, 182, 212, 0.15)', color: 'var(--accent-cyan)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(6, 182, 212, 0.3)' }}>
               <Target size={26} />
             </div>
-            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Smart Goal Tracking</h3>
-            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>Smart Goal Tracking</h3>
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
               Set weight targets, weekly consistency streaks, and strength milestones with automated workout progress calculations.
             </p>
           </div>
@@ -699,20 +721,18 @@ export const Landing = () => {
           <div
             className="glass-card glass-card-glow"
             style={{
-              background: 'rgba(15, 23, 42, 0.78)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(139, 92, 246, 0.25)',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-light)',
               borderRadius: '20px',
               padding: '28px 24px',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           >
-            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(139, 92, 246, 0.2)', color: '#8b5cf6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}>
+            <div style={{ width: '50px', height: '50px', borderRadius: '14px', background: 'rgba(139, 92, 246, 0.15)', color: 'var(--accent-purple)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', boxShadow: '0 0 20px rgba(139, 92, 246, 0.3)' }}>
               <LineChart size={26} />
             </div>
-            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: '#fff', fontWeight: 700 }}>Advanced Analytics</h3>
-            <p style={{ fontSize: '0.92rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6 }}>
+            <h3 style={{ fontSize: '1.3rem', marginBottom: '10px', color: 'var(--text-primary)', fontWeight: 700 }}>Advanced Analytics</h3>
+            <p style={{ fontSize: '0.92rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
               Visualize total volume progression, caloric burn rates, muscle group distribution, and workout frequency over time.
             </p>
           </div>

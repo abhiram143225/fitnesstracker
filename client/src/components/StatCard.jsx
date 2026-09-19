@@ -56,7 +56,7 @@ export const StatCard = ({ title, value, unit, icon: Icon, color = 'emerald', tr
       </div>
 
       <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-        <span style={{ fontSize: '1.9rem', fontWeight: 800, fontFamily: 'var(--font-display)', color: '#ffffff' }}>
+        <span style={{ fontSize: '1.9rem', fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text-primary)' }}>
           {value}
         </span>
         {unit && <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: 500 }}>{unit}</span>}

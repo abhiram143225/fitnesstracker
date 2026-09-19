@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Flame, Bell, Plus, User as UserIcon } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ThemeToggle } from './ThemeToggle';
 
 export const Navbar = () => {
   const { user } = useAuth();
@@ -31,15 +32,16 @@ export const Navbar = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: 'rgba(14, 19, 31, 0.7)',
+        backgroundColor: 'var(--bg-nav)',
         backdropFilter: 'blur(12px)',
         position: 'sticky',
         top: 0,
         zIndex: 30,
+        transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
       }}
     >
       <div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
           {getPageTitle(location.pathname)}
         </h2>
         <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -48,6 +50,9 @@ export const Navbar = () => {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* Theme Toggle Button */}
+        <ThemeToggle size="sm" />
+
         <button
           onClick={() => navigate('/workouts/new')}
           className="btn btn-primary btn-sm hide-desktop-btn"
@@ -68,6 +73,7 @@ export const Navbar = () => {
             borderRadius: 'var(--radius-full)',
             border: '1px solid var(--border-subtle)',
             cursor: 'pointer',
+            transition: 'all var(--transition-fast)',
           }}
         >
           <div
@@ -76,7 +82,7 @@ export const Navbar = () => {
               height: '24px',
               borderRadius: '50%',
               background: 'var(--accent-primary)',
-              color: '#051a14',
+              color: 'var(--btn-primary-text)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -86,7 +92,7 @@ export const Navbar = () => {
           >
             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
-          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>
             {user?.name?.split(' ')[0] || 'Profile'}
           </span>
         </div>

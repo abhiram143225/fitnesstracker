@@ -1,5 +1,7 @@
-:root {
-  /* Core Palette */
+:root,
+[data-theme="dark"],
+.theme-dark {
+  /* Core Dark Palette */
   --bg-dark: #07090e;
   --bg-surface: #0e131f;
   --bg-surface-elevated: #141c2e;
@@ -7,10 +9,12 @@
   --bg-card: rgba(18, 26, 43, 0.75);
   --bg-card-hover: rgba(26, 38, 64, 0.85);
   --bg-glass: rgba(15, 23, 42, 0.65);
+  --bg-input: rgba(10, 15, 26, 0.85);
+  --bg-nav: rgba(14, 19, 31, 0.8);
 
   /* Borders & Dividers */
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-light: rgba(255, 255, 255, 0.12);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-light: rgba(255, 255, 255, 0.14);
   --border-focus: rgba(16, 185, 129, 0.5);
   --border-active: #10b981;
 
@@ -24,6 +28,14 @@
   --accent-amber: #f59e0b;
   --accent-rose: #f43f5e;
   --accent-danger: #ef4444;
+
+  /* Button text */
+  --btn-primary-text: #051a14;
+  --btn-secondary-bg: #141c2e;
+  --btn-secondary-text: #f8fafc;
+  --btn-toggle-bg: rgba(15, 23, 42, 0.85);
+  --btn-toggle-text: #ffffff;
+  --btn-toggle-border: rgba(255, 255, 255, 0.18);
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
@@ -67,4 +79,64 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* BRIGHT / LIGHT THEME (Soft, reduced brightness, visible background) */
+[data-theme="bright"],
+[data-theme="light"],
+.theme-bright {
+  /* Soft Dimmed Bright Palette */
+  --bg-dark: #dfe6ee;
+  --bg-surface: #ecf2f8;
+  --bg-surface-elevated: #d9e3ed;
+  --bg-surface-hover: #cad6e3;
+  --bg-card: rgba(236, 242, 248, 0.92);
+  --bg-card-hover: #e3ebf4;
+  --bg-glass: rgba(236, 242, 248, 0.85);
+  --bg-input: #f4f8fc;
+  --bg-nav: rgba(223, 230, 238, 0.92);
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(0, 0, 0, 0.1);
+  --border-light: rgba(0, 0, 0, 0.18);
+  --border-focus: rgba(5, 150, 105, 0.6);
+  --border-active: #059669;
+
+  /* Accent Colors */
+  --accent-primary: #059669;
+  --accent-primary-glow: rgba(5, 150, 105, 0.25);
+  --accent-primary-hover: #047857;
+  --accent-cyan: #0891b2;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-amber: #d97706;
+  --accent-rose: #e11d48;
+  --accent-danger: #dc2626;
+
+  /* Button text */
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #d9e3ed;
+  --btn-secondary-text: #09111e;
+  --btn-toggle-bg: #d9e3ed;
+  --btn-toggle-text: #09111e;
+  --btn-toggle-border: rgba(0, 0, 0, 0.18);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #059669 0%, #0891b2 100%);
+  --gradient-purple: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+  --gradient-amber: linear-gradient(135deg, #d97706 0%, #dc2626 100%);
+  --gradient-dark: linear-gradient(180deg, rgba(236, 242, 248, 0.95) 0%, rgba(223, 230, 238, 0.98) 100%);
+  --gradient-card-glow: radial-gradient(circle at top left, rgba(5, 150, 105, 0.1), transparent 70%);
+
+  /* Text Colors */
+  --text-primary: #09111e;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 18px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.13);
+  --shadow-glow: 0 0 20px rgba(5, 150, 105, 0.15);
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowRight, User, Mail, Lock, Dumbbell, Target, Sparkles, AlertCircle } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
@@ -83,17 +83,15 @@ export const Register = () => {
       className="glass-card"
       style={{
         padding: '36px 32px',
-        background: 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        border: '1px solid rgba(255, 255, 255, 0.16)',
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-light)',
         borderRadius: '24px',
-        boxShadow: '0 24px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(6, 182, 212, 0.15)',
+        boxShadow: 'var(--shadow-lg)',
       }}
     >
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '6px', color: '#ffffff' }}>Create Account</h2>
-        <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)' }}>All fields are required to calculate your BMI and recommendations</p>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '6px', color: 'var(--text-primary)' }}>Create Account</h2>
+        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>All fields are required to calculate your BMI and recommendations</p>
       </div>
 
       <form onSubmit={handleSubmit}>

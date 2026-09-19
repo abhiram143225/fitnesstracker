@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
     },
     preferences: {
       unitSystem: { type: String, enum: ['metric', 'imperial'], default: 'metric' },
-      theme: { type: String, enum: ['dark', 'light'], default: 'dark' },
+      theme: { type: String, enum: ['dark', 'bright', 'light'], default: 'dark' },
       emailNotifications: { type: Boolean, default: true },
       soundEnabled: { type: Boolean, default: true },
     },

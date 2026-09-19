@@ -5,14 +5,8 @@ import {
   Clock,
   Dumbbell,
   Trophy,
-  Award,
-  Zap,
-  Target,
-  CheckCircle2,
-  Lock,
-  Layers,
   Activity,
-  BarChart2,
+  Lock,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -120,20 +114,20 @@ export const Progress = () => {
           <span className="badge badge-cyan" style={{ marginBottom: '6px' }}>
             <Activity size={12} /> Advanced Performance Analytics
           </span>
-          <h1 style={{ fontSize: '1.75rem', margin: 0 }}>Analytics & Trends</h1>
+          <h1 style={{ fontSize: '1.75rem', margin: 0, color: 'var(--text-primary)' }}>Analytics & Trends</h1>
         </div>
 
         <div style={{ display: 'flex', gap: '8px', background: 'var(--bg-surface-elevated)', padding: '4px', borderRadius: 'var(--radius-full)', border: '1px solid var(--border-subtle)' }}>
           <button
             onClick={() => { setTimeframe('7'); setTrendData(generateEmptyDays(7)); }}
-            className={`btn btn-sm ${timeframe === '7' ? 'btn-primary' : ''}`}
+            className={`btn btn-sm ${timeframe === '7' ? 'btn-primary' : 'btn-secondary'}`}
             style={{ borderRadius: 'var(--radius-full)', padding: '5px 14px' }}
           >
             Past 7 Days
           </button>
           <button
             onClick={() => { setTimeframe('30'); setTrendData(generateEmptyDays(30)); }}
-            className={`btn btn-sm ${timeframe === '30' ? 'btn-primary' : ''}`}
+            className={`btn btn-sm ${timeframe === '30' ? 'btn-primary' : 'btn-secondary'}`}
             style={{ borderRadius: 'var(--radius-full)', padding: '5px 14px' }}
           >
             Past 30 Days
@@ -145,7 +139,7 @@ export const Progress = () => {
       <div className="grid-cols-4" style={{ marginBottom: '28px' }}>
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Total Volume Lifted</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-primary)', marginTop: '4px' }}>
             {totalVolumeInPeriod.toLocaleString()} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>kg</span>
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Sets × Reps × Weight</span>
@@ -153,7 +147,7 @@ export const Progress = () => {
 
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Calorie Expenditure</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f59e0b', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-amber)', marginTop: '4px' }}>
             {totalCaloriesInPeriod.toLocaleString()} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>kcal</span>
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Energy output in period</span>
@@ -161,7 +155,7 @@ export const Progress = () => {
 
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Workout Frequency</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#06b6d4', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-cyan)', marginTop: '4px' }}>
             {totalWorkoutsInPeriod} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>sessions</span>
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Current streak: {summary.currentStreak} days</span>
@@ -169,7 +163,7 @@ export const Progress = () => {
 
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Milestone Score</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#8b5cf6', marginTop: '4px' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-purple)', marginTop: '4px' }}>
             {totalPoints} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>pts</span>
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{unlockedCount} badges unlocked</span>
@@ -182,8 +176,8 @@ export const Progress = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Total Weight Volume Progression</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Progressive overload volume (kg lifted)</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Total Weight Volume Progression</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Progressive overload volume (kg lifted)</p>
             </div>
             <span className="badge badge-emerald">Volume</span>
           </div>
@@ -197,15 +191,15 @@ export const Progress = () => {
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" />
-                <XAxis dataKey="day" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" />
+                <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0e131f',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    borderColor: 'var(--border-light)',
                     borderRadius: '8px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                   }}
                   formatter={(val) => [`${val.toLocaleString()} kg`, 'Volume Lifted']}
                 />
@@ -219,8 +213,8 @@ export const Progress = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Calorie Burn Rates</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Estimated calories burned per session</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Calorie Burn Rates</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Estimated calories burned per session</p>
             </div>
             <span className="badge badge-amber">Energy (kcal)</span>
           </div>
@@ -228,19 +222,19 @@ export const Progress = () => {
           <div style={{ width: '100%', height: '240px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={trendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" vertical={false} />
-                <XAxis dataKey="day" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0e131f',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    borderColor: 'var(--border-light)',
                     borderRadius: '8px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                   }}
                   formatter={(val) => [`${val} kcal`, 'Calories Burned']}
                 />
-                <Bar dataKey="calories" fill="#f59e0b" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="calories" fill="var(--accent-amber)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -253,8 +247,8 @@ export const Progress = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Muscle Group Distribution</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Targeted muscle focus across sets</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Muscle Group Distribution</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Targeted muscle focus across sets</p>
             </div>
           </div>
 
@@ -283,10 +277,10 @@ export const Progress = () => {
                     </Pie>
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#0e131f',
-                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        backgroundColor: 'var(--bg-surface-elevated)',
+                        borderColor: 'var(--border-light)',
                         borderRadius: '8px',
-                        color: '#fff',
+                        color: 'var(--text-primary)',
                       }}
                       formatter={(val) => [`${val} Sets`, 'Target Sets']}
                     />
@@ -296,7 +290,7 @@ export const Progress = () => {
 
               <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap', marginTop: '8px' }}>
                 {muscleData.map((item, idx) => (
-                  <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem' }}>
+                  <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
                     <span>{item.name} ({item.value})</span>
                   </div>
@@ -310,8 +304,8 @@ export const Progress = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Workout Frequency & Consistency</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Daily workout session frequency</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Workout Frequency & Consistency</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Daily workout session frequency</p>
             </div>
             <span className="badge badge-purple">Sessions / Day</span>
           </div>
@@ -319,18 +313,18 @@ export const Progress = () => {
           <div style={{ width: '100%', height: '230px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" vertical={false} />
-                <XAxis dataKey="day" stroke="#64748b" fontSize={11} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={11} tickLine={false} allowDecimals={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={11} tickLine={false} allowDecimals={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0e131f',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    borderColor: 'var(--border-light)',
                     borderRadius: '8px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                   }}
                 />
-                <Bar dataKey="workouts" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="workouts" fill="var(--accent-purple)" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -344,13 +338,13 @@ export const Progress = () => {
             <div className="badge badge-amber" style={{ marginBottom: '6px' }}>
               <Trophy size={13} /> Gamification Milestones
             </div>
-            <h2 style={{ fontSize: '1.35rem', margin: 0 }}>Achievements Progress</h2>
+            <h2 style={{ fontSize: '1.35rem', margin: 0, color: 'var(--text-primary)' }}>Achievements Progress</h2>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SCORE</div>
-              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f59e0b' }}>
+              <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--accent-amber)' }}>
                 {totalPoints} PTS
               </div>
             </div>
@@ -369,7 +363,7 @@ export const Progress = () => {
             <div
               key={ach._id}
               style={{
-                backgroundColor: ach.isUnlocked ? 'var(--bg-surface-elevated)' : 'rgba(14, 19, 31, 0.4)',
+                backgroundColor: ach.isUnlocked ? 'var(--bg-surface-elevated)' : 'var(--bg-surface)',
                 border: `1px solid ${ach.isUnlocked ? 'rgba(245, 158, 11, 0.3)' : 'var(--border-subtle)'}`,
                 borderRadius: '12px',
                 padding: '16px',
@@ -386,8 +380,8 @@ export const Progress = () => {
                       width: '38px',
                       height: '38px',
                       borderRadius: '10px',
-                      background: ach.isUnlocked ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 255, 255, 0.05)',
-                      color: ach.isUnlocked ? '#f59e0b' : 'var(--text-muted)',
+                      background: ach.isUnlocked ? 'rgba(245, 158, 11, 0.15)' : 'var(--bg-surface-elevated)',
+                      color: ach.isUnlocked ? 'var(--accent-amber)' : 'var(--text-muted)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -401,7 +395,7 @@ export const Progress = () => {
                   </span>
                 </div>
 
-                <h4 style={{ color: ach.isUnlocked ? '#fff' : 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '4px' }}>
+                <h4 style={{ color: ach.isUnlocked ? 'var(--text-primary)' : 'var(--text-secondary)', fontSize: '0.95rem', marginBottom: '4px' }}>
                   {ach.title}
                 </h4>
                 <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>
@@ -410,7 +404,7 @@ export const Progress = () => {
               </div>
 
               <div style={{ marginTop: '14px', paddingTop: '8px', borderTop: '1px solid var(--border-subtle)', display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem' }}>
-                <span style={{ color: ach.isUnlocked ? '#10b981' : 'var(--text-muted)', fontWeight: 600 }}>
+                <span style={{ color: ach.isUnlocked ? 'var(--accent-primary)' : 'var(--text-muted)', fontWeight: 600 }}>
                   {ach.isUnlocked ? '✓ Unlocked' : 'Locked Milestone'}
                 </span>
               </div>

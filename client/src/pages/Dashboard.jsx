@@ -25,6 +25,7 @@ import {
 } from 'recharts';
 import { StatCard } from '../components/StatCard';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { progressService } from '../services/progressService';
 import { workoutService } from '../services/workoutService';
 import { goalService } from '../services/goalService';
@@ -33,6 +34,7 @@ import { useToast } from '../context/ToastContext';
 
 export const Dashboard = () => {
   const { user } = useAuth();
+  const { isBright } = useTheme();
   const navigate = useNavigate();
   const { showToast } = useToast();
 
@@ -123,8 +125,10 @@ export const Dashboard = () => {
       <div
         className="glass-card"
         style={{
-          background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%)',
-          border: '1px solid rgba(16, 185, 129, 0.25)',
+          background: isBright
+            ? 'linear-gradient(135deg, rgba(5, 150, 105, 0.08) 0%, rgba(8, 145, 178, 0.06) 100%)'
+            : 'linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%)',
+          border: '1px solid var(--border-light)',
           padding: '24px 28px',
           marginBottom: '24px',
           display: 'flex',
@@ -138,11 +142,11 @@ export const Dashboard = () => {
           <div className="badge badge-emerald" style={{ marginBottom: '8px' }}>
             <Zap size={13} /> Active Athlete Dashboard
           </div>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '4px' }}>
+          <h2 style={{ fontSize: '1.5rem', marginBottom: '4px', color: 'var(--text-primary)' }}>
             Welcome, {user?.name ? user.name.split(' ')[0] : 'Athlete'}!
           </h2>
-          <p style={{ margin: 0, fontSize: '0.9rem' }}>
-            You've completed <strong style={{ color: '#fff' }}>{summary.workoutsThisWeek} of {summary.weeklyGoal || 4}</strong> workouts this week. All training data is saved to your account.
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+            You've completed <strong style={{ color: 'var(--text-primary)' }}>{summary.workoutsThisWeek} of {summary.weeklyGoal || 4}</strong> workouts this week. All training data is saved to your account.
           </p>
         </div>
 
@@ -158,7 +162,7 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* KPI Stats Grid - Real zero-initialized values */}
+      {/* KPI Stats Grid */}
       <div className="grid-cols-4" style={{ marginBottom: '28px' }}>
         <StatCard
           title="Workouts Completed"
@@ -198,8 +202,8 @@ export const Dashboard = () => {
       <div
         className="glass-card"
         style={{
-          border: '1px solid rgba(6, 182, 212, 0.3)',
-          background: 'linear-gradient(135deg, rgba(14, 19, 31, 0.9) 0%, rgba(6, 182, 212, 0.08) 100%)',
+          border: '1px solid var(--border-light)',
+          background: 'var(--bg-card)',
           marginBottom: '28px',
           padding: '24px',
         }}
@@ -212,7 +216,7 @@ export const Dashboard = () => {
                 height: '36px',
                 borderRadius: '10px',
                 background: 'rgba(6, 182, 212, 0.15)',
-                color: '#06b6d4',
+                color: 'var(--accent-cyan)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -221,11 +225,11 @@ export const Dashboard = () => {
               <Sparkles size={20} />
             </div>
             <div>
-              <h3 style={{ fontSize: '1.2rem', color: '#fff', margin: 0 }}>
+              <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', margin: 0 }}>
                 Personalized Exercise Recommendations
               </h3>
               <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                Tailored for your goal: <strong style={{ color: '#06b6d4', textTransform: 'capitalize' }}>{user?.profile?.fitnessGoal?.replace('_', ' ') || 'Build Muscle'}</strong> • BMI: <strong style={{ color: plan.bmiColor }}>{plan.bmi} ({plan.bmiCategory})</strong>
+                Tailored for your goal: <strong style={{ color: 'var(--accent-cyan)', textTransform: 'capitalize' }}>{user?.profile?.fitnessGoal?.replace('_', ' ') || 'Build Muscle'}</strong> • BMI: <strong style={{ color: plan.bmiColor }}>{plan.bmi} ({plan.bmiCategory})</strong>
               </span>
             </div>
           </div>
@@ -235,7 +239,7 @@ export const Dashboard = () => {
           </div>
         </div>
 
-        <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '16px', lineHeight: 1.5 }}>
+        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: 1.5 }}>
           {plan.strategy}
         </p>
 
@@ -250,7 +254,7 @@ export const Dashboard = () => {
         >
           <div style={{ background: 'var(--bg-surface-elevated)', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>RECOMMENDED SETS</span>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#fff' }}>{plan.targetSets}</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-primary)' }}>{plan.targetSets}</div>
           </div>
           <div style={{ background: 'var(--bg-surface-elevated)', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>TARGET REP RANGE</span>
@@ -258,7 +262,7 @@ export const Dashboard = () => {
           </div>
           <div style={{ background: 'var(--bg-surface-elevated)', padding: '10px 14px', borderRadius: '8px', border: '1px solid var(--border-subtle)' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>REST INTERVAL</span>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#38bdf8' }}>{plan.restInterval}</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)' }}>{plan.restInterval}</div>
           </div>
         </div>
 
@@ -273,12 +277,12 @@ export const Dashboard = () => {
                 key={exName}
                 onClick={() => navigate('/exercises')}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: 'var(--bg-surface-elevated)',
+                  border: '1px solid var(--border-subtle)',
                   borderRadius: '8px',
                   padding: '6px 12px',
                   fontSize: '0.85rem',
-                  color: '#fff',
+                  color: 'var(--text-primary)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
@@ -286,7 +290,7 @@ export const Dashboard = () => {
                   transition: 'all 0.15s',
                 }}
               >
-                <Dumbbell size={14} color="#10b981" />
+                <Dumbbell size={14} color="var(--accent-primary)" />
                 <span>{exName}</span>
               </div>
             ))}
@@ -300,8 +304,8 @@ export const Dashboard = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '20px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Weekly Workout Volume</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Calories burned per day</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Weekly Workout Volume</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Calories burned per day</p>
             </div>
             <span className="badge badge-cyan">Past 7 Days</span>
           </div>
@@ -309,23 +313,23 @@ export const Dashboard = () => {
           <div style={{ width: '100%', height: '240px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weeklyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.05)" vertical={false} />
-                <XAxis dataKey="day" stroke="#64748b" fontSize={12} tickLine={false} />
-                <YAxis stroke="#64748b" fontSize={12} tickLine={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                <XAxis dataKey="day" stroke="var(--text-muted)" fontSize={12} tickLine={false} />
+                <YAxis stroke="var(--text-muted)" fontSize={12} tickLine={false} />
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#0e131f',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: 'var(--bg-surface-elevated)',
+                    borderColor: 'var(--border-light)',
                     borderRadius: '8px',
-                    color: '#fff',
+                    color: 'var(--text-primary)',
                   }}
-                  cursor={{ fill: 'rgba(255, 255, 255, 0.03)' }}
+                  cursor={{ fill: 'var(--border-subtle)' }}
                 />
                 <Bar dataKey="calories" fill="url(#emeraldGrad)" radius={[6, 6, 0, 0]} />
                 <defs>
                   <linearGradient id="emeraldGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.9} />
-                    <stop offset="100%" stopColor="#06b6d4" stopOpacity={0.3} />
+                    <stop offset="0%" stopColor="var(--accent-primary)" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="var(--accent-cyan)" stopOpacity={0.3} />
                   </linearGradient>
                 </defs>
               </BarChart>
@@ -337,8 +341,8 @@ export const Dashboard = () => {
         <div className="glass-card">
           <div className="flex-between" style={{ marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '1.15rem' }}>Active Fitness Goals</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Target metrics & progression</p>
+              <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Active Fitness Goals</h3>
+              <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Target metrics & progression</p>
             </div>
             <button onClick={() => navigate('/goals')} className="btn btn-outline btn-sm">
               + Add Goal
@@ -368,7 +372,7 @@ export const Dashboard = () => {
                     }}
                   >
                     <div className="flex-between" style={{ marginBottom: '8px' }}>
-                      <span style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fff' }}>{goal.title}</span>
+                      <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{goal.title}</span>
                       <span style={{ fontSize: '0.8rem', color: 'var(--accent-primary)', fontWeight: 700 }}>
                         {goal.currentValue} / {goal.targetValue} {goal.unit} ({pct}%)
                       </span>
@@ -402,8 +406,8 @@ export const Dashboard = () => {
       <div className="glass-card">
         <div className="flex-between" style={{ marginBottom: '20px' }}>
           <div>
-            <h3 style={{ fontSize: '1.15rem' }}>Recent Workout Logs</h3>
-            <p style={{ fontSize: '0.8rem', margin: 0 }}>Your latest completed gym and training sessions</p>
+            <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)' }}>Recent Workout Logs</h3>
+            <p style={{ fontSize: '0.8rem', margin: 0, color: 'var(--text-secondary)' }}>Your latest completed gym and training sessions</p>
           </div>
           <button onClick={() => navigate('/workouts')} className="btn btn-secondary btn-sm">
             View All Workouts
@@ -414,7 +418,7 @@ export const Dashboard = () => {
         {recentWorkouts.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '36px 16px', color: 'var(--text-muted)' }}>
             <Dumbbell size={40} style={{ opacity: 0.3, marginBottom: '10px' }} />
-            <h4 style={{ color: '#fff', marginBottom: '6px' }}>No workouts recorded yet</h4>
+            <h4 style={{ color: 'var(--text-primary)', marginBottom: '6px' }}>No workouts recorded yet</h4>
             <p style={{ marginBottom: '16px' }}>Log your first training session to track your volume and progressive overload!</p>
             <button onClick={() => navigate('/workouts/new')} className="btn btn-primary btn-sm">
               Log Your First Workout
@@ -433,7 +437,7 @@ export const Dashboard = () => {
                 }}
               >
                 <div className="flex-between" style={{ marginBottom: '10px' }}>
-                  <h4 style={{ color: '#fff', fontSize: '1rem', margin: 0 }}>{workout.title}</h4>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '1rem', margin: 0 }}>{workout.title}</h4>
                   <span className="badge badge-emerald">
                     <CheckCircle2 size={12} /> {workout.feeling || 'Completed'}
                   </span>

@@ -18,7 +18,7 @@ export const MobileNav = () => {
         left: 0,
         right: 0,
         height: '65px',
-        backgroundColor: 'rgba(14, 19, 31, 0.95)',
+        backgroundColor: 'var(--bg-nav)',
         backdropFilter: 'blur(16px)',
         borderTop: '1px solid var(--border-light)',
         display: 'flex',
@@ -26,6 +26,7 @@ export const MobileNav = () => {
         justifyContent: 'space-around',
         zIndex: 50,
         padding: '0 8px',
+        transition: 'background-color var(--transition-normal), border-color var(--transition-normal)',
       }}
     >
       <NavLink
@@ -68,7 +69,7 @@ export const MobileNav = () => {
           height: '46px',
           borderRadius: '50%',
           background: 'var(--gradient-primary)',
-          color: '#051a14',
+          color: 'var(--btn-primary-text)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

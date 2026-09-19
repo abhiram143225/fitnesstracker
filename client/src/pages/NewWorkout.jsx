@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Plus,
@@ -11,10 +11,7 @@ import {
   Play,
   Pause,
   RotateCcw,
-  Sparkles,
   Info,
-  HelpCircle,
-  Volume2,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { workoutService } from '../services/workoutService';
@@ -168,7 +165,6 @@ export const NewWorkout = () => {
       updated[exerciseIndex].sets[setIndex].completed = nextVal;
       return updated;
     });
-    // Trigger selected rest interval timer automatically on checking a set
     startTimer(restSeconds);
   };
 
@@ -221,7 +217,6 @@ export const NewWorkout = () => {
 
       await workoutService.createWorkout(payload);
 
-      // Milestone confetti animation
       try {
         confetti({
           particleCount: 140,
@@ -254,7 +249,7 @@ export const NewWorkout = () => {
           <span className="badge badge-emerald" style={{ marginBottom: '6px' }}>
             <Flame size={12} /> Dynamic Workout Logger
           </span>
-          <h1 style={{ fontSize: '1.75rem', margin: 0 }}>Active Training Session</h1>
+          <h1 style={{ fontSize: '1.75rem', margin: 0, color: 'var(--text-primary)' }}>Active Training Session</h1>
         </div>
 
         <div style={{ display: 'flex', gap: '12px' }}>
@@ -319,7 +314,7 @@ export const NewWorkout = () => {
           >
             <div>
               <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>SESSION DURATION</span>
-              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', fontFamily: 'monospace' }}>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'monospace' }}>
                 {formatStopwatch(sessionSeconds)}
               </div>
             </div>
@@ -328,7 +323,7 @@ export const NewWorkout = () => {
               className="btn-icon"
               title={isStopwatchRunning ? 'Pause Stopwatch' : 'Resume Stopwatch'}
             >
-              {isStopwatchRunning ? <Pause size={16} color="#f59e0b" /> : <Play size={16} color="#10b981" />}
+              {isStopwatchRunning ? <Pause size={16} color="var(--accent-amber)" /> : <Play size={16} color="var(--accent-primary)" />}
             </button>
           </div>
         </div>
@@ -348,9 +343,9 @@ export const NewWorkout = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Clock size={18} color="#06b6d4" />
-            <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>Rest Interval Timer:</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: timeLeft > 0 ? '#38bdf8' : '#10b981', fontFamily: 'monospace' }}>
+            <Clock size={18} color="var(--accent-cyan)" />
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)' }}>Rest Interval Timer:</span>
+            <span style={{ fontSize: '1.25rem', fontWeight: 800, color: timeLeft > 0 ? 'var(--accent-cyan)' : 'var(--accent-primary)', fontFamily: 'monospace' }}>
               {Math.floor(timeLeft / 60)}:{String(timeLeft % 60).padStart(2, '0')}
             </span>
           </div>
@@ -380,8 +375,8 @@ export const NewWorkout = () => {
       {workoutExercises.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px 20px', marginBottom: '24px' }}>
           <Dumbbell size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-          <h3 style={{ fontSize: '1.2rem', marginBottom: '6px' }}>Your routine is empty</h3>
-          <p style={{ marginBottom: '20px' }}>Add exercises from the library to start tracking sets, weights, and RPE.</p>
+          <h3 style={{ fontSize: '1.2rem', marginBottom: '6px', color: 'var(--text-primary)' }}>Your routine is empty</h3>
+          <p style={{ marginBottom: '20px', color: 'var(--text-secondary)' }}>Add exercises from the library to start tracking sets, weights, and RPE.</p>
           <button
             onClick={() => setIsPickerOpen(true)}
             className="btn btn-primary"
@@ -396,16 +391,16 @@ export const NewWorkout = () => {
             <div key={exIdx} className="glass-card" style={{ padding: '20px' }}>
               <div className="flex-between" style={{ marginBottom: '16px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Dumbbell size={18} />
                   </div>
-                  <h3 style={{ fontSize: '1.15rem', margin: 0, color: '#fff' }}>{we.exerciseName}</h3>
+                  <h3 style={{ fontSize: '1.15rem', margin: 0, color: 'var(--text-primary)' }}>{we.exerciseName}</h3>
                   <span className="badge badge-cyan">{we.category}</span>
                   <button
                     onClick={() => setInspectExercise(we)}
                     className="btn-icon"
                     title="View Exercise Technique Instructions"
-                    style={{ padding: '4px', color: '#06b6d4' }}
+                    style={{ padding: '4px', color: 'var(--accent-cyan)' }}
                   >
                     <Info size={16} />
                   </button>
@@ -415,7 +410,7 @@ export const NewWorkout = () => {
                   onClick={() => handleRemoveExercise(exIdx)}
                   className="btn-icon"
                   title="Remove Exercise"
-                  style={{ color: '#ef4444' }}
+                  style={{ color: 'var(--accent-danger)' }}
                 >
                   <Trash2 size={16} />
                 </button>
@@ -439,8 +434,8 @@ export const NewWorkout = () => {
                       <tr
                         key={setIdx}
                         style={{
-                          borderBottom: '1px solid rgba(255,255,255,0.03)',
-                          backgroundColor: set.completed ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
+                          borderBottom: '1px solid var(--border-subtle)',
+                          backgroundColor: set.completed ? 'rgba(16, 185, 129, 0.08)' : 'transparent',
                         }}
                       >
                         <td style={{ padding: '8px 12px', fontWeight: 700, color: 'var(--text-secondary)' }}>
@@ -489,7 +484,7 @@ export const NewWorkout = () => {
                               height: '30px',
                               borderRadius: '8px',
                               background: set.completed ? 'var(--accent-primary)' : 'var(--bg-surface-elevated)',
-                              color: set.completed ? '#051a14' : 'var(--text-muted)',
+                              color: set.completed ? 'var(--btn-primary-text)' : 'var(--text-muted)',
                               border: `1px solid ${set.completed ? 'var(--accent-primary)' : 'var(--border-light)'}`,
                               display: 'inline-flex',
                               alignItems: 'center',
@@ -584,12 +579,12 @@ export const NewWorkout = () => {
               }}
             >
               <div>
-                <div style={{ fontWeight: 600, color: '#fff', fontSize: '0.95rem' }}>{ex.name}</div>
+                <div style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>{ex.name}</div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                   {ex.category} • {ex.muscleGroups?.join(', ')} • {ex.equipment}
                 </div>
               </div>
-              <Plus size={18} color="#10b981" />
+              <Plus size={18} color="var(--accent-primary)" />
             </div>
           ))}
         </div>
@@ -606,7 +601,7 @@ export const NewWorkout = () => {
           <div>
             <div style={{ marginBottom: '16px' }}>
               <span className="badge badge-emerald" style={{ marginBottom: '8px' }}>{inspectExercise.category}</span>
-              <h3 style={{ fontSize: '1.2rem', color: '#fff' }}>{inspectExercise.exerciseName}</h3>
+              <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)' }}>{inspectExercise.exerciseName}</h3>
             </div>
 
             {inspectExercise.instructions && inspectExercise.instructions.length > 0 ? (
@@ -614,7 +609,7 @@ export const NewWorkout = () => {
                 <h4 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '8px', textTransform: 'uppercase' }}>
                   Step-by-Step Instructions:
                 </h4>
-                <ol style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: '#cbd5e1' }}>
+                <ol style={{ paddingLeft: '18px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                   {inspectExercise.instructions.map((step, idx) => (
                     <li key={idx}>{step}</li>
                   ))}
@@ -628,8 +623,8 @@ export const NewWorkout = () => {
 
             {inspectExercise.tips && inspectExercise.tips.length > 0 && (
               <div style={{ background: 'rgba(16, 185, 129, 0.08)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                <h4 style={{ fontSize: '0.85rem', color: '#10b981', marginBottom: '4px' }}>Coach Tip:</h4>
-                <ul style={{ paddingLeft: '16px', margin: 0, fontSize: '0.85rem', color: '#cbd5e1' }}>
+                <h4 style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', marginBottom: '4px' }}>Coach Tip:</h4>
+                <ul style={{ paddingLeft: '16px', margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
                   {inspectExercise.tips.map((t, idx) => (
                     <li key={idx}>{t}</li>
                   ))}

@@ -176,7 +176,7 @@ export const Goals = () => {
           <span className="badge badge-emerald" style={{ marginBottom: '6px' }}>
             <Target size={12} /> Smart Goal Tracking
           </span>
-          <h1 style={{ fontSize: '1.75rem', margin: 0 }}>Goals & Milestones</h1>
+          <h1 style={{ fontSize: '1.75rem', margin: 0, color: 'var(--text-primary)' }}>Goals & Milestones</h1>
         </div>
         <button onClick={() => setIsCreateModalOpen(true)} className="btn btn-primary">
           <Plus size={18} />
@@ -201,13 +201,13 @@ export const Goals = () => {
       {/* Goals Grid */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '48px' }}>
-          <p>Loading your goals...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading your goals...</p>
         </div>
       ) : goals.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
           <Target size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-          <h3 style={{ fontSize: '1.25rem', marginBottom: '6px' }}>No active goals</h3>
-          <p style={{ marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '6px', color: 'var(--text-primary)' }}>No active goals</h3>
+          <p style={{ marginBottom: '20px', color: 'var(--text-secondary)' }}>
             Set a body weight target, weekly workout frequency streak, or strength PR. Workouts will automatically progress your goals!
           </p>
           <button onClick={() => setIsCreateModalOpen(true)} className="btn btn-primary">
@@ -247,21 +247,21 @@ export const Goals = () => {
                       <button
                         onClick={() => handleDeleteGoal(goal._id)}
                         className="btn-icon"
-                        style={{ padding: '4px', color: '#ef4444' }}
+                        style={{ padding: '4px', color: 'var(--accent-danger)' }}
                       >
                         <Trash2 size={14} />
                       </button>
                     </div>
                   </div>
 
-                  <h3 style={{ fontSize: '1.2rem', color: '#fff', marginBottom: '8px' }}>
+                  <h3 style={{ fontSize: '1.2rem', color: 'var(--text-primary)', marginBottom: '8px' }}>
                     {goal.title}
                   </h3>
 
                   {/* Numbers & Progress */}
                   <div className="flex-between" style={{ marginBottom: '8px' }}>
                     <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      Current: <strong style={{ color: '#fff' }}>{goal.currentValue} {goal.unit}</strong>
+                      Current: <strong style={{ color: 'var(--text-primary)' }}>{goal.currentValue} {goal.unit}</strong>
                     </span>
                     <span style={{ fontSize: '0.85rem', color: 'var(--accent-primary)', fontWeight: 700 }}>
                       Target: {goal.targetValue} {goal.unit} ({pct}%)
@@ -331,16 +331,16 @@ export const Goals = () => {
           </span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             <button type="button" onClick={() => applyPreset('weight_loss')} className="btn btn-secondary btn-sm">
-              <Scale size={14} color="#10b981" /> Weight Loss (-5kg)
+              <Scale size={14} color="var(--accent-primary)" /> Weight Loss (-5kg)
             </button>
             <button type="button" onClick={() => applyPreset('bench_pr')} className="btn btn-secondary btn-sm">
-              <Dumbbell size={14} color="#06b6d4" /> 100kg Bench PR
+              <Dumbbell size={14} color="var(--accent-cyan)" /> 100kg Bench PR
             </button>
             <button type="button" onClick={() => applyPreset('weekly_streak')} className="btn btn-secondary btn-sm">
-              <Zap size={14} color="#f59e0b" /> Weekly Consistency
+              <Zap size={14} color="var(--accent-amber)" /> Weekly Consistency
             </button>
             <button type="button" onClick={() => applyPreset('calorie_milestone')} className="btn btn-secondary btn-sm">
-              <Flame size={14} color="#ec4899" /> 10k Calories Burned
+              <Flame size={14} color="var(--accent-rose)" /> 10k Calories Burned
             </button>
           </div>
         </div>

@@ -66,8 +66,8 @@ export const Workouts = () => {
       {/* Top Header */}
       <div className="flex-between" style={{ marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Workout History</h1>
-          <p style={{ margin: 0 }}>Review all logged training sessions and progressive overload</p>
+          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Workout History</h1>
+          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Review all logged training sessions and progressive overload</p>
         </div>
         <button onClick={() => navigate('/workouts/new')} className="btn btn-primary">
           <Plus size={18} />
@@ -79,28 +79,28 @@ export const Workouts = () => {
       <div className="grid-cols-3" style={{ marginBottom: '24px' }}>
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Total Sessions</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#fff', marginTop: '4px' }}>{workouts.length}</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', marginTop: '4px' }}>{workouts.length}</div>
         </div>
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Total Duration</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#06b6d4', marginTop: '4px' }}>{totalMinutes} mins</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-cyan)', marginTop: '4px' }}>{totalMinutes} mins</div>
         </div>
         <div className="glass-card" style={{ padding: '16px' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Calories Burned</span>
-          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f59e0b', marginTop: '4px' }}>{totalCalories.toLocaleString()} kcal</div>
+          <div style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--accent-amber)', marginTop: '4px' }}>{totalCalories.toLocaleString()} kcal</div>
         </div>
       </div>
 
       {/* Workouts List */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '48px' }}>
-          <p>Loading your workouts...</p>
+          <p style={{ color: 'var(--text-secondary)' }}>Loading your workouts...</p>
         </div>
       ) : workouts.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
           <Dumbbell size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-          <h3>No workout logs yet</h3>
-          <p style={{ marginBottom: '20px' }}>Start your first training session and log your sets.</p>
+          <h3 style={{ color: 'var(--text-primary)' }}>No workout logs yet</h3>
+          <p style={{ marginBottom: '20px', color: 'var(--text-secondary)' }}>Start your first training session and log your sets.</p>
           <button onClick={() => navigate('/workouts/new')} className="btn btn-primary">
             Log Workout Now
           </button>
@@ -131,7 +131,7 @@ export const Workouts = () => {
                         height: '42px',
                         borderRadius: '10px',
                         background: 'rgba(16, 185, 129, 0.15)',
-                        color: '#10b981',
+                        color: 'var(--accent-primary)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -141,7 +141,7 @@ export const Workouts = () => {
                     </div>
 
                     <div>
-                      <h3 style={{ fontSize: '1.15rem', color: '#fff', margin: 0 }}>{workout.title}</h3>
+                      <h3 style={{ fontSize: '1.15rem', color: 'var(--text-primary)', margin: 0 }}>{workout.title}</h3>
                       <div style={{ display: 'flex', gap: '12px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                           <Calendar size={13} /> {dateStr}
@@ -150,7 +150,7 @@ export const Workouts = () => {
                           <Clock size={13} /> {workout.duration} min
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <Flame size={13} color="#f59e0b" /> {workout.caloriesBurned} kcal
+                          <Flame size={13} color="var(--accent-amber)" /> {workout.caloriesBurned} kcal
                         </span>
                       </div>
                     </div>
@@ -162,7 +162,7 @@ export const Workouts = () => {
                       onClick={(e) => handleDeleteWorkout(e, workout._id)}
                       className="btn-icon"
                       title="Delete workout"
-                      style={{ color: '#ef4444' }}
+                      style={{ color: 'var(--accent-danger)' }}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -196,7 +196,7 @@ export const Workouts = () => {
                           }}
                         >
                           <div className="flex-between" style={{ marginBottom: '8px' }}>
-                            <span style={{ fontWeight: 600, color: '#fff', fontSize: '0.95rem' }}>
+                            <span style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '0.95rem' }}>
                               {ex.exerciseName || ex.exercise?.name || `Exercise #${exIdx + 1}`}
                             </span>
                             <span className="badge badge-cyan">{ex.category || 'Strength'}</span>
@@ -208,11 +208,12 @@ export const Workouts = () => {
                               <div
                                 key={sIdx}
                                 style={{
-                                  background: 'rgba(255, 255, 255, 0.05)',
+                                  background: 'var(--bg-surface)',
+                                  border: '1px solid var(--border-subtle)',
                                   padding: '4px 10px',
                                   borderRadius: '6px',
                                   fontSize: '0.8rem',
-                                  color: '#cbd5e1',
+                                  color: 'var(--text-secondary)',
                                 }}
                               >
                                 <strong>Set {s.setNumber}:</strong> {s.weight ? `${s.weight}kg × ` : ''}{s.reps} reps

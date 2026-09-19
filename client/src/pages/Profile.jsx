@@ -10,12 +10,16 @@ import {
   Save,
   LogOut,
   Sparkles,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useToast } from '../context/ToastContext';
 
 export const Profile = () => {
   const { user, updateProfile, logout } = useAuth();
+  const { theme, setTheme } = useTheme();
   const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -27,6 +31,7 @@ export const Profile = () => {
     weeklyWorkoutTarget: user?.profile?.weeklyWorkoutTarget || 4,
     dailyCalorieTarget: user?.profile?.dailyCalorieTarget || 2300,
     dailyWaterTarget: user?.profile?.dailyWaterTarget || 2500,
+    theme: user?.preferences?.theme || theme || 'dark',
   });
 
   const [saving, setSaving] = useState(false);
@@ -48,6 +53,9 @@ export const Profile = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === 'theme') {
+      setTheme(value);
+    }
   };
 
   const handleSave = async (e) => {
@@ -65,9 +73,14 @@ export const Profile = () => {
           dailyCalorieTarget: Number(formData.dailyCalorieTarget),
           dailyWaterTarget: Number(formData.dailyWaterTarget),
         },
+        preferences: {
+          theme: formData.theme,
+        },
       });
-      showToast('Profile parameters updated successfully!', 'success');
+      setTheme(formData.theme);
+      showToast('Profile parameters and theme saved successfully!', 'success');
     } catch {
+      setTheme(formData.theme);
       showToast('Profile updated locally!', 'info');
     } finally {
       setSaving(false);
@@ -78,8 +91,8 @@ export const Profile = () => {
     <div className="page-container" style={{ maxWidth: '850px' }}>
       {/* Header */}
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Profile & Settings</h1>
-        <p style={{ margin: 0 }}>Configure personal biometrics, training targets, and preferences</p>
+        <h1 style={{ fontSize: '1.75rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Profile & Settings</h1>
+        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Configure personal biometrics, training targets, and app theme preferences</p>
       </div>
 
       {/* Top Profile Card */}
@@ -91,7 +104,7 @@ export const Profile = () => {
               height: '64px',
               borderRadius: '50%',
               background: 'linear-gradient(135deg, #10b981, #06b6d4)',
-              color: '#051a14',
+              color: 'var(--btn-primary-text)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -103,7 +116,7 @@ export const Profile = () => {
             {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
           </div>
           <div>
-            <h2 style={{ fontSize: '1.35rem', margin: 0 }}>{user?.name || 'Athlete'}</h2>
+            <h2 style={{ fontSize: '1.35rem', margin: 0, color: 'var(--text-primary)' }}>{user?.name || 'Athlete'}</h2>
             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{user?.email || 'athlete@pulse.dev'}</span>
             <div style={{ marginTop: '6px' }}>
               <span className="badge badge-emerald" style={{ textTransform: 'capitalize' }}>
@@ -126,29 +139,29 @@ export const Profile = () => {
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>BMI Index</span>
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: bmiCat.color }}>{bmiCat.text}</span>
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fff' }}>{bmi}</div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-primary)' }}>{bmi}</div>
         </div>
 
         <div className="glass-card" style={{ padding: '16px' }}>
           <div className="flex-between" style={{ marginBottom: '8px' }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Height</span>
-            <Ruler size={16} color="#06b6d4" />
+            <Ruler size={16} color="var(--accent-cyan)" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#06b6d4' }}>{formData.height} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>cm</span></div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>{formData.height} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>cm</span></div>
         </div>
 
         <div className="glass-card" style={{ padding: '16px' }}>
           <div className="flex-between" style={{ marginBottom: '8px' }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Weight</span>
-            <Scale size={16} color="#10b981" />
+            <Scale size={16} color="var(--accent-primary)" />
           </div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981' }}>{formData.weight} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>kg</span></div>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-primary)' }}>{formData.weight} <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>kg</span></div>
         </div>
       </div>
 
       {/* Edit Settings Form */}
       <form onSubmit={handleSave} className="glass-card" style={{ padding: '24px' }}>
-        <h3 style={{ fontSize: '1.15rem', marginBottom: '20px' }}>Personal Information & Fitness Targets</h3>
+        <h3 style={{ fontSize: '1.15rem', marginBottom: '20px', color: 'var(--text-primary)' }}>Personal Information & Fitness Targets</h3>
 
         <div className="form-group">
           <label className="form-label">Full Name</label>
@@ -160,6 +173,60 @@ export const Profile = () => {
             onChange={handleChange}
             required
           />
+        </div>
+
+        {/* Theme Preference */}
+        <div className="form-group" style={{ marginBottom: '20px' }}>
+          <label className="form-label">App Appearance & Theme</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <button
+              type="button"
+              onClick={() => {
+                setFormData((p) => ({ ...p, theme: 'dark' }));
+                setTheme('dark');
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: formData.theme === 'dark' ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-surface-elevated)',
+                border: formData.theme === 'dark' ? '2px solid var(--accent-primary)' : '1px solid var(--border-light)',
+                color: 'var(--text-primary)',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              <Moon size={18} color={formData.theme === 'dark' ? '#10b981' : 'var(--text-secondary)'} />
+              <span>Dark Theme</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setFormData((p) => ({ ...p, theme: 'bright' }));
+                setTheme('bright');
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: 'var(--radius-md)',
+                backgroundColor: formData.theme === 'bright' ? 'rgba(5, 150, 105, 0.15)' : 'var(--bg-surface-elevated)',
+                border: formData.theme === 'bright' ? '2px solid var(--accent-primary)' : '1px solid var(--border-light)',
+                color: 'var(--text-primary)',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              <Sun size={18} color={formData.theme === 'bright' ? '#f59e0b' : 'var(--text-secondary)'} />
+              <span>Bright Theme</span>
+            </button>
+          </div>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>

@@ -3,8 +3,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Dumbbell,
-  Clock,
-  Flame,
   Calendar as CalendarIcon,
   Plus,
 } from 'lucide-react';
@@ -82,8 +80,8 @@ export const CalendarView = () => {
       {/* Header */}
       <div className="flex-between" style={{ marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Workout Calendar</h1>
-          <p style={{ margin: 0 }}>View your training schedule, consistency dates, and history</p>
+          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px', color: 'var(--text-primary)' }}>Workout Calendar</h1>
+          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>View your training schedule, consistency dates, and history</p>
         </div>
         <button onClick={() => navigate('/workouts/new')} className="btn btn-primary">
           <Plus size={18} />
@@ -96,7 +94,7 @@ export const CalendarView = () => {
         <div className="glass-card" style={{ padding: '24px' }}>
           {/* Month Navigation */}
           <div className="flex-between" style={{ marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '1.3rem', margin: 0 }}>
+            <h2 style={{ fontSize: '1.3rem', margin: 0, color: 'var(--text-primary)' }}>
               {monthNames[currentMonth - 1]} {currentYear}
             </h2>
 
@@ -146,12 +144,12 @@ export const CalendarView = () => {
                       ? 'rgba(16, 185, 129, 0.15)'
                       : hasWorkouts
                       ? 'var(--bg-surface-elevated)'
-                      : 'rgba(255, 255, 255, 0.02)',
+                      : 'var(--bg-surface)',
                     border: `1px solid ${
                       isSelected
                         ? 'var(--accent-primary)'
                         : hasWorkouts
-                        ? 'rgba(16, 185, 129, 0.3)'
+                        ? 'var(--accent-primary)'
                         : 'var(--border-subtle)'
                     }`,
                     cursor: 'pointer',
@@ -161,7 +159,7 @@ export const CalendarView = () => {
                     transition: 'all 0.15s',
                   }}
                 >
-                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: isSelected ? '#10b981' : '#fff' }}>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 600, color: isSelected ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                     {day}
                   </span>
 
@@ -171,7 +169,7 @@ export const CalendarView = () => {
                         style={{
                           fontSize: '0.65rem',
                           background: 'var(--accent-primary)',
-                          color: '#051a14',
+                          color: 'var(--btn-primary-text)',
                           padding: '1px 6px',
                           borderRadius: '4px',
                           fontWeight: 700,
@@ -191,7 +189,7 @@ export const CalendarView = () => {
         <div className="glass-card" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
             <CalendarIcon size={20} color="var(--accent-primary)" />
-            <h3 style={{ fontSize: '1.15rem', margin: 0 }}>
+            <h3 style={{ fontSize: '1.15rem', margin: 0, color: 'var(--text-primary)' }}>
               {monthNames[currentMonth - 1]} {selectedDay}, {currentYear}
             </h3>
           </div>
@@ -216,13 +214,13 @@ export const CalendarView = () => {
                     padding: '14px',
                   }}
                 >
-                  <h4 style={{ color: '#fff', fontSize: '1rem', marginBottom: '6px' }}>{w.title}</h4>
+                  <h4 style={{ color: 'var(--text-primary)', fontSize: '1rem', marginBottom: '6px' }}>{w.title}</h4>
                   <div style={{ display: 'flex', gap: '12px', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '10px' }}>
                     <span>⏱️ {w.duration} mins</span>
                     <span>🔥 {w.caloriesBurned} kcal</span>
                   </div>
 
-                  <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
                     {w.exercises?.map((ex, idx) => (
                       <div key={idx} style={{ marginBottom: '4px' }}>
                         • {ex.exerciseName || ex.exercise?.name} ({ex.sets?.length || 0} sets)
