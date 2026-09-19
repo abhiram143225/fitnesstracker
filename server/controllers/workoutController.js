@@ -1,4 +1,5 @@
 import { Workout } from '../models/Workout.js';
+import { Goal } from '../models/Goal.js';
 import { UserAchievement, Achievement } from '../models/Achievement.js';
 
 // Helper to check and unlock achievements asynchronously
@@ -55,6 +56,48 @@ const evaluateAchievements = async (userId) => {
   }
 };
 
+// Automatic Smart Goal Progress Calculation
+const evaluateGoals = async (userId, newWorkout) => {
+  try {
+    const activeGoals = await Goal.find({ user: userId, status: 'in_progress' });
+    for (const goal of activeGoals) {
+      let updated = false;
+
+      if (goal.type === 'workouts_per_week' || goal.type === 'custom') {
+        goal.currentValue += 1;
+        updated = true;
+      } else if (goal.type === 'calories') {
+        goal.currentValue += (newWorkout.caloriesBurned || 0);
+        updated = true;
+      } else if (goal.type === 'strength_pr') {
+        // Find if any exercise in workout matches the goal title
+        for (const ex of (newWorkout.exercises || [])) {
+          const nameLower = (ex.exerciseName || '').toLowerCase();
+          const goalTitleLower = goal.title.toLowerCase();
+          if (goalTitleLower.includes(nameLower) || nameLower.includes(goalTitleLower) || goalTitleLower.includes('strength')) {
+            const maxWeight = Math.max(...(ex.sets || []).map(s => s.weight || 0), 0);
+            if (maxWeight > goal.currentValue) {
+              goal.currentValue = maxWeight;
+              updated = true;
+            }
+          }
+        }
+      }
+
+      // Check for completion
+      if (goal.currentValue >= goal.targetValue) {
+        goal.status = 'completed';
+      }
+
+      if (updated) {
+        await goal.save();
+      }
+    }
+  } catch (err) {
+    console.error('[Goal Auto-Calculation Error]', err.message);
+  }
+};
+
 // @desc    Get user workouts
 // @route   GET /api/workouts
 // @access  Private
@@ -74,7 +117,7 @@ export const getWorkouts = async (req, res, next) => {
       .sort({ date: -1 })
       .skip((page - 1) * limit)
       .limit(Number(limit))
-      .populate('exercises.exercise', 'name category muscleGroups equipment');
+      .populate('exercises.exercise', 'name category muscleGroups equipment instructions');
 
     res.status(200).json({
       success: true,
@@ -113,7 +156,7 @@ export const createWorkout = async (req, res, next) => {
   try {
     const { title, date, duration, caloriesBurned, feeling, exercises, notes } = req.body;
 
-    // Estimate calories burned if not provided (average 7 cal/min)
+    // Estimate calories burned if not provided (average 7.5 cal/min)
     const estimatedCalories = caloriesBurned || Math.round((duration || 45) * 7.5);
 
     const workout = await Workout.create({
@@ -127,12 +170,13 @@ export const createWorkout = async (req, res, next) => {
       notes: notes || '',
     });
 
-    // Asynchronously check achievements in background
+    // Automatically evaluate Smart Goals and Achievements in background
+    evaluateGoals(req.user._id, workout);
     evaluateAchievements(req.user._id);
 
     res.status(201).json({
       success: true,
-      message: 'Workout logged successfully!',
+      message: 'Workout logged and smart goals updated!',
       data: workout,
     });
   } catch (error) {

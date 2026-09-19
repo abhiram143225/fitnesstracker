@@ -7,13 +7,19 @@ import {
   Trash2,
   TrendingUp,
   Sparkles,
+  Zap,
+  Dumbbell,
+  Scale,
+  Flame,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { goalService } from '../services/goalService';
 import { Modal } from '../components/Modal';
+import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 
 export const Goals = () => {
+  const { user } = useAuth();
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, in_progress, completed
@@ -22,9 +28,9 @@ export const Goals = () => {
   const [newGoal, setNewGoal] = useState({
     title: '',
     type: 'weight',
-    startValue: 80,
-    currentValue: 80,
-    targetValue: 75,
+    startValue: user?.profile?.weight || 70,
+    currentValue: user?.profile?.weight || 70,
+    targetValue: (user?.profile?.weight || 70) - 3,
     unit: 'kg',
     targetDate: '',
     category: 'Weight Management',
@@ -42,9 +48,12 @@ export const Goals = () => {
       const res = await goalService.getGoals(filter);
       if (res.data) {
         setGoals(res.data);
+      } else {
+        setGoals([]);
       }
     } catch (err) {
       console.error('Error fetching goals:', err);
+      setGoals([]);
     } finally {
       setLoading(false);
     }
@@ -60,11 +69,63 @@ export const Goals = () => {
         targetValue: Number(newGoal.targetValue),
       });
 
-      showToast('New fitness goal established!', 'success');
+      showToast('Smart fitness goal established and saved to database!', 'success');
       setIsCreateModalOpen(false);
       setGoals((prev) => [res.data, ...prev]);
     } catch (err) {
       showToast(err.response?.data?.message || 'Failed to create goal', 'error');
+    }
+  };
+
+  const applyPreset = (presetType) => {
+    const userWeight = user?.profile?.weight || 70;
+    switch (presetType) {
+      case 'weight_loss':
+        setNewGoal({
+          title: 'Target Body Weight',
+          type: 'weight',
+          startValue: userWeight,
+          currentValue: userWeight,
+          targetValue: userWeight - 5,
+          unit: 'kg',
+          category: 'Weight Management',
+        });
+        break;
+      case 'bench_pr':
+        setNewGoal({
+          title: 'Bench Press PR Milestone',
+          type: 'strength_pr',
+          startValue: 60,
+          currentValue: 60,
+          targetValue: 100,
+          unit: 'kg',
+          category: 'Strength PR',
+        });
+        break;
+      case 'weekly_streak':
+        setNewGoal({
+          title: 'Weekly Workout Consistency Streak',
+          type: 'workouts_per_week',
+          startValue: 0,
+          currentValue: 0,
+          targetValue: user?.profile?.weeklyWorkoutTarget || 4,
+          unit: 'sessions',
+          category: 'Consistency',
+        });
+        break;
+      case 'calorie_milestone':
+        setNewGoal({
+          title: 'Monthly Calorie Burn Target',
+          type: 'calories',
+          startValue: 0,
+          currentValue: 0,
+          targetValue: 10000,
+          unit: 'kcal',
+          category: 'Cardio & Burn',
+        });
+        break;
+      default:
+        break;
     }
   };
 
@@ -84,7 +145,7 @@ export const Goals = () => {
             origin: { y: 0.6 },
           });
         } catch {}
-        showToast('🏆 Milestone Reached! Goal Marked Completed!', 'success');
+        showToast('🏆 Milestone Reached! Goal Marked Completed in Database!', 'success');
       }
 
       await goalService.updateGoalProgress(id, { value: nextVal });
@@ -92,10 +153,7 @@ export const Goals = () => {
         prev.map((g) => (g._id === id ? { ...g, currentValue: nextVal, status: isCompleted ? 'completed' : g.status } : g))
       );
     } catch {
-      setGoals((prev) =>
-        prev.map((g) => (g._id === id ? { ...g, currentValue: g.currentValue + delta } : g))
-      );
-      showToast('Progress updated (local)', 'info');
+      showToast('Could not update progress', 'error');
     }
   };
 
@@ -103,11 +161,10 @@ export const Goals = () => {
     if (!window.confirm('Are you sure you want to delete this goal?')) return;
     try {
       await goalService.deleteGoal(id);
-      showToast('Goal removed', 'success');
+      showToast('Goal removed from database', 'success');
       setGoals((prev) => prev.filter((g) => g._id !== id));
     } catch {
-      setGoals((prev) => prev.filter((g) => g._id !== id));
-      showToast('Goal removed (local)', 'info');
+      showToast('Could not delete goal', 'error');
     }
   };
 
@@ -116,8 +173,10 @@ export const Goals = () => {
       {/* Header */}
       <div className="flex-between" style={{ marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Fitness Goals</h1>
-          <p style={{ margin: 0 }}>Set milestones, monitor progression, and celebrate achievements</p>
+          <span className="badge badge-emerald" style={{ marginBottom: '6px' }}>
+            <Target size={12} /> Smart Goal Tracking
+          </span>
+          <h1 style={{ fontSize: '1.75rem', margin: 0 }}>Goals & Milestones</h1>
         </div>
         <button onClick={() => setIsCreateModalOpen(true)} className="btn btn-primary">
           <Plus size={18} />
@@ -142,13 +201,15 @@ export const Goals = () => {
       {/* Goals Grid */}
       {loading ? (
         <div style={{ textAlign: 'center', padding: '48px' }}>
-          <p>Loading goals...</p>
+          <p>Loading your goals...</p>
         </div>
       ) : goals.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '60px 20px' }}>
           <Target size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
-          <h3>No goals found</h3>
-          <p style={{ marginBottom: '20px' }}>Define your target metrics to keep motivation high!</p>
+          <h3 style={{ fontSize: '1.25rem', marginBottom: '6px' }}>No active goals</h3>
+          <p style={{ marginBottom: '20px' }}>
+            Set a body weight target, weekly workout frequency streak, or strength PR. Workouts will automatically progress your goals!
+          </p>
           <button onClick={() => setIsCreateModalOpen(true)} className="btn btn-primary">
             Create Your First Goal
           </button>
@@ -179,7 +240,9 @@ export const Goals = () => {
                           <CheckCircle2 size={12} /> Completed
                         </span>
                       ) : (
-                        <span className="badge badge-cyan">In Progress</span>
+                        <span className="badge badge-cyan">
+                          <Sparkles size={11} /> Auto-Tracking
+                        </span>
                       )}
                       <button
                         onClick={() => handleDeleteGoal(goal._id)}
@@ -227,7 +290,7 @@ export const Goals = () => {
                   }}
                 >
                   <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                    {isCompleted ? 'Goal Crushed! 🏆' : `${Math.max(0, goal.targetValue - goal.currentValue)} ${goal.unit} left`}
+                    {isCompleted ? 'Goal Crushed! 🏆' : `${Math.max(0, goal.targetValue - goal.currentValue)} ${goal.unit} remaining`}
                   </span>
 
                   {!isCompleted && (
@@ -255,15 +318,36 @@ export const Goals = () => {
         </div>
       )}
 
-      {/* Create Goal Modal */}
+      {/* Create Goal Modal with 1-Click Smart Presets */}
       <Modal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        title="Create New Fitness Goal"
+        title="Establish Smart Fitness Goal"
       >
+        {/* Quick Presets */}
+        <div style={{ marginBottom: '16px' }}>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, display: 'block', marginBottom: '8px' }}>
+            Quick Smart Presets:
+          </span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            <button type="button" onClick={() => applyPreset('weight_loss')} className="btn btn-secondary btn-sm">
+              <Scale size={14} color="#10b981" /> Weight Loss (-5kg)
+            </button>
+            <button type="button" onClick={() => applyPreset('bench_pr')} className="btn btn-secondary btn-sm">
+              <Dumbbell size={14} color="#06b6d4" /> 100kg Bench PR
+            </button>
+            <button type="button" onClick={() => applyPreset('weekly_streak')} className="btn btn-secondary btn-sm">
+              <Zap size={14} color="#f59e0b" /> Weekly Consistency
+            </button>
+            <button type="button" onClick={() => applyPreset('calorie_milestone')} className="btn btn-secondary btn-sm">
+              <Flame size={14} color="#ec4899" /> 10k Calories Burned
+            </button>
+          </div>
+        </div>
+
         <form onSubmit={handleCreateGoal}>
           <div className="form-group">
-            <label className="form-label">Goal Title</label>
+            <label className="form-label">Goal Title *</label>
             <input
               type="text"
               className="form-input"
@@ -276,14 +360,14 @@ export const Goals = () => {
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div className="form-group">
-              <label className="form-label">Goal Type</label>
+              <label className="form-label">Goal Type *</label>
               <select
                 className="form-select"
                 value={newGoal.type}
                 onChange={(e) => setNewGoal({ ...newGoal, type: e.target.value })}
               >
                 <option value="weight">Body Weight</option>
-                <option value="workouts_per_week">Weekly Workouts</option>
+                <option value="workouts_per_week">Weekly Workout Sessions</option>
                 <option value="strength_pr">Strength PR (Lift)</option>
                 <option value="distance">Cardio Distance</option>
                 <option value="calories">Calorie Burn Target</option>
@@ -291,7 +375,7 @@ export const Goals = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Unit of Measure</label>
+              <label className="form-label">Unit of Measure *</label>
               <input
                 type="text"
                 className="form-input"
@@ -316,7 +400,7 @@ export const Goals = () => {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Target Value</label>
+              <label className="form-label">Target Value *</label>
               <input
                 type="number"
                 className="form-input"
@@ -328,7 +412,7 @@ export const Goals = () => {
           </div>
 
           <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '12px' }}>
-            Set Fitness Goal
+            Set & Save Fitness Goal
           </button>
         </form>
       </Modal>

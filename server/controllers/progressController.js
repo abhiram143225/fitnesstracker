@@ -10,14 +10,24 @@ export const getSummaryStats = async (req, res, next) => {
   try {
     const userId = req.user._id;
 
-    // Get all workouts for the authenticated user
+    // Get all workouts for user
     const workouts = await Workout.find({ user: userId }).sort({ date: 1 });
 
     const totalWorkouts = workouts.length;
     const totalMinutes = workouts.reduce((sum, w) => sum + (w.duration || 0), 0);
     const totalCalories = workouts.reduce((sum, w) => sum + (w.caloriesBurned || 0), 0);
 
-    // Calculate streak accurately
+    // Calculate total volume (sets * reps * weight)
+    let totalVolumeKg = 0;
+    workouts.forEach(w => {
+      w.exercises?.forEach(ex => {
+        ex.sets?.forEach(s => {
+          totalVolumeKg += (Number(s.weight) || 0) * (Number(s.reps) || 0);
+        });
+      });
+    });
+
+    // Calculate streak
     let currentStreak = 0;
     let longestStreak = 0;
 
@@ -39,7 +49,7 @@ export const getSummaryStats = async (req, res, next) => {
         }
       }
 
-      // Check if last workout was today or yesterday to consider streak active
+      // Check if last workout was today or yesterday
       const lastWorkoutDate = new Date(dates[dates.length - 1]);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -72,6 +82,7 @@ export const getSummaryStats = async (req, res, next) => {
         totalWorkouts,
         totalMinutes,
         totalCalories,
+        totalVolumeKg,
         currentStreak,
         longestStreak,
         workoutsThisWeek,
@@ -86,19 +97,20 @@ export const getSummaryStats = async (req, res, next) => {
   }
 };
 
-// @desc    Get weekly chart analytics (day by day)
+// @desc    Get weekly chart analytics (day by day volume, calories, workouts)
 // @route   GET /api/progress/weekly
 // @access  Private
 export const getWeeklyAnalytics = async (req, res, next) => {
   try {
     const userId = req.user._id;
+    const { daysCount = 7 } = req.query;
 
-    // Generate past 7 days
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     const result = [];
     const today = new Date();
+    const count = parseInt(daysCount) || 7;
 
-    for (let i = 6; i >= 0; i--) {
+    for (let i = count - 1; i >= 0; i--) {
       const d = new Date();
       d.setDate(today.getDate() - i);
       d.setHours(0, 0, 0, 0);
@@ -113,14 +125,22 @@ export const getWeeklyAnalytics = async (req, res, next) => {
 
       const calories = dayWorkouts.reduce((sum, w) => sum + (w.caloriesBurned || 0), 0);
       const minutes = dayWorkouts.reduce((sum, w) => sum + (w.duration || 0), 0);
-      const workoutCount = dayWorkouts.length;
+      let dayVolume = 0;
+      dayWorkouts.forEach(w => {
+        w.exercises?.forEach(ex => {
+          ex.sets?.forEach(s => {
+            dayVolume += (Number(s.weight) || 0) * (Number(s.reps) || 0);
+          });
+        });
+      });
 
       result.push({
         date: d.toISOString().split('T')[0],
         day: days[d.getDay()],
         calories,
         minutes,
-        workouts: workoutCount,
+        volume: dayVolume,
+        workouts: dayWorkouts.length,
       });
     }
 
@@ -147,13 +167,12 @@ export const getCategoryDistribution = async (req, res, next) => {
     workouts.forEach(workout => {
       workout.exercises.forEach(ex => {
         const cat = ex.category || ex.exercise?.category || 'Strength';
-        categoryMap[cat] = (categoryMap[cat] || 0) + 1;
+        categoryMap[cat] = (categoryMap[cat] || 0) + (ex.sets?.length || 1);
 
-        if (ex.exercise?.muscleGroups) {
-          ex.exercise.muscleGroups.forEach(m => {
-            muscleMap[m] = (muscleMap[m] || 0) + 1;
-          });
-        }
+        const muscleGroups = ex.exercise?.muscleGroups || [ex.exerciseName || 'General'];
+        muscleGroups.forEach(m => {
+          muscleMap[m] = (muscleMap[m] || 0) + (ex.sets?.length || 1);
+        });
       });
     });
 
@@ -177,7 +196,6 @@ export const getAchievements = async (req, res, next) => {
   try {
     const userId = req.user._id;
 
-    // Ensure achievements exist
     let allAchievements = await Achievement.find().sort({ points: 1 });
     if (allAchievements.length === 0) {
       await Achievement.insertMany(initialAchievements);
