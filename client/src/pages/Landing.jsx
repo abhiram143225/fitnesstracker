@@ -573,9 +573,8 @@ export const Landing = () => {
               </div>
             </div>
 
-            {/* 5. Your Fitness Journey Card */}
+            {/* 5. Your Fitness Journey Card (Non-button with Jiggle Animation) */}
             <div
-              onClick={handleDashboardClick}
               className="metric-card-jiggle"
               style={{
                 background: 'rgba(15, 23, 42, 0.8)',
@@ -587,36 +586,54 @@ export const Landing = () => {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
-                cursor: 'pointer',
+                cursor: 'default',
+                userSelect: 'none',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <div
                   style={{
-                    width: '44px',
-                    height: '44px',
-                    borderRadius: '12px',
-                    background: 'rgba(6, 182, 212, 0.15)',
-                    border: '1px solid rgba(6, 182, 212, 0.3)',
+                    width: '48px',
+                    height: '48px',
+                    borderRadius: '14px',
+                    background: 'linear-gradient(135deg, #8b5cf6, #6366f1)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: '#06b6d4',
+                    color: '#fff',
+                    boxShadow: '0 0 18px rgba(139, 92, 246, 0.45)',
                   }}
                 >
-                  <Target size={22} />
+                  <Target size={24} />
                 </div>
                 <div>
                   <div style={{ fontSize: '1rem', color: '#fff', fontWeight: 700 }}>
                     Your Fitness Journey
                   </div>
-                  <div style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.65)' }}>
+                  <div style={{ fontSize: '0.82rem', color: 'rgba(255, 255, 255, 0.65)' }}>
                     Track • Improve • Achieve
+                  </div>
+                  <div style={{ fontSize: '0.78rem', color: '#8b5cf6', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                    <TrendingUp size={13} /> Active Streak: 7 Days
                   </div>
                 </div>
               </div>
 
-              <ChevronRight size={18} color="rgba(255, 255, 255, 0.5)" />
+              {/* Progress Ring / Target Badge Indicator */}
+              <div
+                style={{
+                  padding: '6px 12px',
+                  borderRadius: '999px',
+                  background: 'rgba(139, 92, 246, 0.15)',
+                  border: '1px solid rgba(139, 92, 246, 0.3)',
+                  color: '#a78bfa',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.04em',
+                }}
+              >
+                LEVEL 4
+              </div>
             </div>
           </div>
         </div>
