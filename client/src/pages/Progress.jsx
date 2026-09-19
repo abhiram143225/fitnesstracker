@@ -27,24 +27,29 @@ import {
   CartesianGrid,
 } from 'recharts';
 import { progressService } from '../services/progressService';
+import { useAuth } from '../context/AuthContext';
 
 export const Progress = () => {
-  const [weeklyData, setWeeklyData] = useState([
-    { day: 'Mon', calories: 420, minutes: 45 },
-    { day: 'Tue', calories: 510, minutes: 55 },
-    { day: 'Wed', calories: 0, minutes: 0 },
-    { day: 'Thu', calories: 480, minutes: 50 },
-    { day: 'Fri', calories: 620, minutes: 60 },
-    { day: 'Sat', calories: 350, minutes: 35 },
-    { day: 'Sun', calories: 150, minutes: 20 },
-  ]);
+  const { user } = useAuth();
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
-  const [categoryData, setCategoryData] = useState([
-    { name: 'Strength', value: 65 },
-    { name: 'Cardio', value: 20 },
-    { name: 'Core', value: 15 },
-  ]);
+  const generateEmptyWeek = () => {
+    const list = [];
+    const today = new Date();
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(today.getDate() - i);
+      list.push({
+        day: daysOfWeek[d.getDay()],
+        calories: 0,
+        minutes: 0,
+      });
+    }
+    return list;
+  };
 
+  const [weeklyData, setWeeklyData] = useState(generateEmptyWeek());
+  const [categoryData, setCategoryData] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -53,19 +58,20 @@ export const Progress = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [wRes, dRes, aRes] = await Promise.allSettled([
           progressService.getWeekly(),
           progressService.getDistribution(),
           progressService.getAchievements(),
         ]);
 
-        if (wRes.status === 'fulfilled' && wRes.value.data?.length) {
+        if (wRes.status === 'fulfilled' && wRes.value?.data?.length) {
           setWeeklyData(wRes.value.data);
         }
-        if (dRes.status === 'fulfilled' && dRes.value.categories?.length) {
+        if (dRes.status === 'fulfilled' && dRes.value?.categories) {
           setCategoryData(dRes.value.categories);
         }
-        if (aRes.status === 'fulfilled' && aRes.value.data) {
+        if (aRes.status === 'fulfilled' && aRes.value?.data) {
           setAchievements(aRes.value.data);
         }
       } catch (err) {
@@ -76,10 +82,11 @@ export const Progress = () => {
     };
 
     fetchData();
-  }, []);
+  }, [user]);
 
   const unlockedCount = achievements.filter((a) => a.isUnlocked).length;
   const totalPoints = achievements.filter((a) => a.isUnlocked).reduce((s, a) => s + (a.points || 0), 0);
+  const totalCaloriesThisWeek = weeklyData.reduce((sum, d) => sum + (d.calories || 0), 0);
 
   return (
     <div className="page-container">
@@ -96,7 +103,9 @@ export const Progress = () => {
           <div className="flex-between" style={{ marginBottom: '20px' }}>
             <div>
               <h3 style={{ fontSize: '1.15rem' }}>Metabolic Output (Calorie Trend)</h3>
-              <p style={{ fontSize: '0.8rem', margin: 0 }}>Daily estimated calories burned</p>
+              <p style={{ fontSize: '0.8rem', margin: 0 }}>
+                {totalCaloriesThisWeek > 0 ? `${totalCaloriesThisWeek} kcal burned past 7 days` : 'Log workouts to record caloric expenditure'}
+              </p>
             </div>
             <span className="badge badge-emerald">🔥 Weekly Active</span>
           </div>
@@ -136,42 +145,51 @@ export const Progress = () => {
             </div>
           </div>
 
-          <div style={{ width: '100%', height: '200px' }}>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={categoryData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                >
-                  {categoryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#0e131f',
-                    borderColor: 'rgba(255, 255, 255, 0.1)',
-                    borderRadius: '8px',
-                    color: '#fff',
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginTop: '8px' }}>
-            {categoryData.map((item, idx) => (
-              <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}>
-                <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
-                <span>{item.name}</span>
+          {categoryData.length === 0 ? (
+            <div style={{ height: '200px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+              <Dumbbell size={36} style={{ opacity: 0.3, marginBottom: '8px' }} />
+              <p style={{ fontSize: '0.85rem' }}>No exercise category data yet.</p>
+            </div>
+          ) : (
+            <>
+              <div style={{ width: '100%', height: '200px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={50}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: '#0e131f',
+                        borderColor: 'rgba(255, 255, 255, 0.1)',
+                        borderRadius: '8px',
+                        color: '#fff',
+                      }}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            ))}
-          </div>
+
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap', marginTop: '8px' }}>
+                {categoryData.map((item, idx) => (
+                  <div key={item.name} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem' }}>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }} />
+                    <span>{item.name} ({item.value})</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
 
@@ -195,7 +213,7 @@ export const Progress = () => {
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>UNLOCKED</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--accent-primary)' }}>
-                {unlockedCount} / {achievements.length || 7}
+                {unlockedCount} / {achievements.length || 0}
               </div>
             </div>
           </div>
@@ -203,14 +221,7 @@ export const Progress = () => {
 
         {/* Badges Grid */}
         <div className="grid-cols-3">
-          {(achievements.length > 0 ? achievements : [
-            { _id: 'a1', title: 'First Step to Greatness', description: 'Logged your first workout in the app.', points: 50, isUnlocked: true, icon: 'Award' },
-            { _id: 'a2', title: 'Consistency Starter', description: 'Maintained a 3-day workout streak.', points: 100, isUnlocked: true, icon: 'Flame' },
-            { _id: 'a3', title: 'Iron Dedication', description: 'Completed 10 workouts total.', points: 200, isUnlocked: false, icon: 'Dumbbell' },
-            { _id: 'a4', title: 'Unstoppable Momentum', description: 'Maintained a 7-day workout streak.', points: 250, isUnlocked: false, icon: 'Zap' },
-            { _id: 'a5', title: 'Goal Crusher', description: 'Successfully reached and completed a fitness goal.', points: 200, isUnlocked: false, icon: 'Target' },
-            { _id: 'a6', title: 'Gym Veteran', description: 'Completed 25 workouts total.', points: 500, isUnlocked: false, icon: 'Trophy' },
-          ]).map((ach) => (
+          {achievements.map((ach) => (
             <div
               key={ach._id}
               style={{

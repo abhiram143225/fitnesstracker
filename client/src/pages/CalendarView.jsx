@@ -30,35 +30,11 @@ export const CalendarView = () => {
       const res = await workoutService.getCalendarWorkouts(currentYear, currentMonth);
       if (res.data) {
         setWorkouts(res.data);
+      } else {
+        setWorkouts([]);
       }
     } catch {
-      // Mock data for seamless offline review
-      setWorkouts([
-        {
-          _id: 'cw1',
-          title: 'Chest & Back Hypertrophy',
-          date: new Date(currentYear, currentMonth - 1, 3).toISOString(),
-          duration: 50,
-          caloriesBurned: 440,
-          exercises: [{ exerciseName: 'Barbell Bench Press', sets: [{ setNumber: 1, reps: 10, weight: 70 }] }],
-        },
-        {
-          _id: 'cw2',
-          title: 'Leg Day & Calves',
-          date: new Date(currentYear, currentMonth - 1, 5).toISOString(),
-          duration: 60,
-          caloriesBurned: 520,
-          exercises: [{ exerciseName: 'Barbell Back Squat', sets: [{ setNumber: 1, reps: 8, weight: 90 }] }],
-        },
-        {
-          _id: 'cw3',
-          title: 'Shoulders & Core',
-          date: new Date(currentYear, currentMonth - 1, 8).toISOString(),
-          duration: 45,
-          caloriesBurned: 390,
-          exercises: [{ exerciseName: 'Overhead Shoulder Press', sets: [{ setNumber: 1, reps: 10, weight: 45 }] }],
-        },
-      ]);
+      setWorkouts([]);
     } finally {
       setLoading(false);
     }

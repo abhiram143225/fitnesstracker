@@ -10,14 +10,14 @@ export const getSummaryStats = async (req, res, next) => {
   try {
     const userId = req.user._id;
 
-    // Get all workouts
+    // Get all workouts for the authenticated user
     const workouts = await Workout.find({ user: userId }).sort({ date: 1 });
 
     const totalWorkouts = workouts.length;
     const totalMinutes = workouts.reduce((sum, w) => sum + (w.duration || 0), 0);
     const totalCalories = workouts.reduce((sum, w) => sum + (w.caloriesBurned || 0), 0);
 
-    // Calculate streak
+    // Calculate streak accurately
     let currentStreak = 0;
     let longestStreak = 0;
 
@@ -162,8 +162,8 @@ export const getCategoryDistribution = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      categories: categoryData.length ? categoryData : [{ name: 'Strength', value: 1 }],
-      muscles: muscleData.length ? muscleData : [{ name: 'Full Body', value: 1 }],
+      categories: categoryData,
+      muscles: muscleData,
     });
   } catch (error) {
     next(error);

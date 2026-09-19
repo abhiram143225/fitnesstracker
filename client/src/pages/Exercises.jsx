@@ -10,18 +10,23 @@ import {
   Zap,
   Info,
   ChevronRight,
+  Sparkles,
 } from 'lucide-react';
 import { exerciseService } from '../services/exerciseService';
 import { Modal } from '../components/Modal';
+import { useAuth } from '../context/AuthContext';
+import { getPersonalizedPlan } from '../utils/recommendations';
 import { useToast } from '../context/ToastContext';
 
 export const Exercises = () => {
+  const { user } = useAuth();
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [muscle, setMuscle] = useState('All');
   const [difficulty, setDifficulty] = useState('All');
+  const [onlyRecommended, setOnlyRecommended] = useState(false);
 
   const [selectedExercise, setSelectedExercise] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -36,10 +41,10 @@ export const Exercises = () => {
   });
 
   const { showToast } = useToast();
+  const plan = getPersonalizedPlan(user?.profile);
 
   const categories = ['All', 'Strength', 'Cardio', 'Core', 'HIIT', 'Calisthenics'];
   const muscles = ['All', 'Chest', 'Back', 'Quads', 'Hamstrings', 'Shoulders', 'Arms', 'Core'];
-  const difficulties = ['All', 'Beginner', 'Intermediate', 'Advanced'];
 
   useEffect(() => {
     fetchExercises();
@@ -72,7 +77,7 @@ export const Exercises = () => {
         ...newExercise,
         instructions: instructionsArr,
       });
-      showToast('Custom exercise added successfully!', 'success');
+      showToast('Custom exercise added successfully and saved to database!', 'success');
       setIsAddModalOpen(false);
       setExercises((prev) => [res.data, ...prev]);
     } catch (err) {
@@ -90,13 +95,22 @@ export const Exercises = () => {
     }
   };
 
+  const displayedExercises = exercises.filter((ex) => {
+    if (onlyRecommended) {
+      return plan.recommendedExercises.some(
+        (name) => name.toLowerCase() === ex.name.toLowerCase()
+      ) || plan.recommendedCategories.includes(ex.category);
+    }
+    return true;
+  });
+
   return (
     <div className="page-container">
       {/* Page Header */}
       <div className="flex-between" style={{ marginBottom: '24px', flexWrap: 'wrap', gap: '16px' }}>
         <div>
           <h1 style={{ fontSize: '1.75rem', marginBottom: '4px' }}>Exercise Library</h1>
-          <p style={{ margin: 0 }}>Explore movements, execution instructions, and target muscles</p>
+          <p style={{ margin: 0 }}>Explore movements, execution instructions, and goal-tailored suggestions</p>
         </div>
         <button onClick={() => setIsAddModalOpen(true)} className="btn btn-primary">
           <Plus size={18} />
@@ -125,13 +139,26 @@ export const Exercises = () => {
 
         {/* Filter Pills */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* Quick Recommendation Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button
+              type="button"
+              onClick={() => setOnlyRecommended(!onlyRecommended)}
+              className={`btn btn-sm ${onlyRecommended ? 'btn-primary' : 'btn-secondary'}`}
+              style={{ padding: '6px 14px', borderRadius: 'var(--radius-full)' }}
+            >
+              <Sparkles size={14} />
+              <span>Recommended for My Goal ({user?.profile?.fitnessGoal?.replace('_', ' ') || 'Build Muscle'})</span>
+            </button>
+          </div>
+
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflowX: 'auto', paddingBottom: '4px' }}>
             <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, minWidth: '70px' }}>Category:</span>
             {categories.map((cat) => (
               <button
                 key={cat}
-                onClick={() => setCategory(cat)}
-                className={`btn btn-sm ${category === cat ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => { setCategory(cat); setOnlyRecommended(false); }}
+                className={`btn btn-sm ${category === cat && !onlyRecommended ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ padding: '4px 12px', borderRadius: 'var(--radius-full)' }}
               >
                 {cat}
@@ -144,8 +171,8 @@ export const Exercises = () => {
             {muscles.map((mus) => (
               <button
                 key={mus}
-                onClick={() => setMuscle(mus)}
-                className={`btn btn-sm ${muscle === mus ? 'btn-primary' : 'btn-secondary'}`}
+                onClick={() => { setMuscle(mus); setOnlyRecommended(false); }}
+                className={`btn btn-sm ${muscle === mus && !onlyRecommended ? 'btn-primary' : 'btn-secondary'}`}
                 style={{ padding: '4px 12px', borderRadius: 'var(--radius-full)' }}
               >
                 {mus}
@@ -161,7 +188,7 @@ export const Exercises = () => {
           <div style={{ width: '36px', height: '36px', border: '3px solid rgba(16,185,129,0.2)', borderTopColor: '#10b981', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 0.8s linear infinite' }} />
           <p>Loading exercise database...</p>
         </div>
-      ) : exercises.length === 0 ? (
+      ) : displayedExercises.length === 0 ? (
         <div className="glass-card" style={{ textAlign: 'center', padding: '48px 16px' }}>
           <Dumbbell size={40} style={{ opacity: 0.3, marginBottom: '12px' }} />
           <h3>No exercises found</h3>
@@ -169,63 +196,77 @@ export const Exercises = () => {
         </div>
       ) : (
         <div className="grid-cols-3">
-          {exercises.map((ex) => (
-            <div
-              key={ex._id}
-              className="glass-card glass-card-glow"
-              onClick={() => setSelectedExercise(ex)}
-              style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}
-            >
-              <div>
-                <div className="flex-between" style={{ marginBottom: '12px' }}>
-                  <span className={`badge ${getCategoryBadgeClass(ex.category)}`}>
-                    {ex.category}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                    {ex.equipment}
-                  </span>
-                </div>
+          {displayedExercises.map((ex) => {
+            const isRecommended = plan.recommendedExercises.some(
+              (name) => name.toLowerCase() === ex.name.toLowerCase()
+            );
 
-                <h3 style={{ fontSize: '1.15rem', color: '#fff', marginBottom: '8px' }}>
-                  {ex.name}
-                </h3>
-
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
-                  {ex.muscleGroups?.map((m) => (
-                    <span
-                      key={m}
-                      style={{
-                        fontSize: '0.75rem',
-                        background: 'rgba(255, 255, 255, 0.06)',
-                        padding: '2px 8px',
-                        borderRadius: '6px',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
-                      {m}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
+            return (
               <div
+                key={ex._id}
+                className="glass-card glass-card-glow"
+                onClick={() => setSelectedExercise(ex)}
                 style={{
-                  borderTop: '1px solid var(--border-subtle)',
-                  paddingTop: '12px',
+                  cursor: 'pointer',
                   display: 'flex',
-                  alignItems: 'center',
+                  flexDirection: 'column',
                   justifyContent: 'space-between',
-                  fontSize: '0.8rem',
-                  color: 'var(--text-secondary)',
+                  border: isRecommended ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid var(--border-subtle)',
                 }}
               >
-                <span>🔥 ~{ex.caloriesPerMinute || 7} kcal/min</span>
-                <span style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: 600 }}>
-                  View Guide <ChevronRight size={14} />
-                </span>
+                <div>
+                  <div className="flex-between" style={{ marginBottom: '12px' }}>
+                    <span className={`badge ${getCategoryBadgeClass(ex.category)}`}>
+                      {ex.category}
+                    </span>
+                    {isRecommended && (
+                      <span className="badge badge-cyan" style={{ fontSize: '0.7rem' }}>
+                        <Sparkles size={11} /> Goal Match
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 style={{ fontSize: '1.15rem', color: '#fff', marginBottom: '8px' }}>
+                    {ex.name}
+                  </h3>
+
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '16px' }}>
+                    {ex.muscleGroups?.map((m) => (
+                      <span
+                        key={m}
+                        style={{
+                          fontSize: '0.75rem',
+                          background: 'rgba(255, 255, 255, 0.06)',
+                          padding: '2px 8px',
+                          borderRadius: '6px',
+                          color: 'var(--text-secondary)',
+                        }}
+                      >
+                        {m}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    borderTop: '1px solid var(--border-subtle)',
+                    paddingTop: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '0.8rem',
+                    color: 'var(--text-secondary)',
+                  }}
+                >
+                  <span>🔥 ~{ex.caloriesPerMinute || 7} kcal/min</span>
+                  <span style={{ color: 'var(--accent-primary)', display: 'flex', alignItems: 'center', gap: '2px', fontWeight: 600 }}>
+                    View Guide <ChevronRight size={14} />
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -381,7 +422,7 @@ export const Exercises = () => {
           </div>
 
           <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '12px' }}>
-            Save Exercise to Library
+            Save Exercise to Database
           </button>
         </form>
       </Modal>
