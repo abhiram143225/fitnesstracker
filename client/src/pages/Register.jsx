@@ -79,10 +79,21 @@ export const Register = () => {
   };
 
   return (
-    <div className="glass-card" style={{ padding: '32px' }}>
+    <div
+      className="glass-card"
+      style={{
+        padding: '36px 32px',
+        background: 'rgba(15, 23, 42, 0.85)',
+        backdropFilter: 'blur(24px)',
+        WebkitBackdropFilter: 'blur(24px)',
+        border: '1px solid rgba(255, 255, 255, 0.16)',
+        borderRadius: '24px',
+        boxShadow: '0 24px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(6, 182, 212, 0.15)',
+      }}
+    >
       <div style={{ textAlign: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '1.6rem', marginBottom: '6px' }}>Create Account</h2>
-        <p style={{ fontSize: '0.85rem' }}>All fields are required to calculate your BMI and recommendations</p>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '6px', color: '#ffffff' }}>Create Account</h2>
+        <p style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.7)' }}>All fields are required to calculate your BMI and recommendations</p>
       </div>
 
       <form onSubmit={handleSubmit}>
