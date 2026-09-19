@@ -21,14 +21,11 @@ import heroBg from '../assets/fittrack_hero.jpg';
 
 export const Landing = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { logout } = useAuth();
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const handleDashboardClick = () => {
-    navigate('/login');
-  };
-
-  const handleSignInClick = () => {
+  const handleAction = () => {
+    logout();
     navigate('/register');
   };
 
@@ -158,7 +155,7 @@ export const Landing = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             {/* Dashboard Button */}
             <button
-              onClick={handleDashboardClick}
+              onClick={handleAction}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -190,7 +187,7 @@ export const Landing = () => {
 
             {/* Sign In Button */}
             <button
-              onClick={handleSignInClick}
+              onClick={handleAction}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -290,7 +287,7 @@ export const Landing = () => {
             {/* Action Buttons */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
               <button
-                onClick={() => navigate('/login')}
+                onClick={handleAction}
                 className="btn btn-primary"
                 style={{
                   padding: '14px 30px',
@@ -307,7 +304,7 @@ export const Landing = () => {
               </button>
 
               <button
-                onClick={() => navigate('/login')}
+                onClick={handleAction}
                 className="btn btn-secondary"
                 style={{
                   padding: '14px 26px',
